@@ -15,7 +15,7 @@ const certifications: Certification[] = [
     name: "AWS Certified Cloud Practitioner",
     issuer: "Amazon Web Services",
     date: "2025",
-    pdfUrl: "https://divij-certifications.s3.ap-south-1.amazonaws.com/AWS/AWS+Certified+Cloud+Practitioner+CLF-C02.pdf", // Replace with actual PDF URL
+    pdfUrl: "https://drive.google.com/file/d/1egh97bzKcJ1ZFwAjHXrvY4wk0QKCwO9J/view?usp=drive_link", // Replace with actual PDF URL
     badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   },
 ];
