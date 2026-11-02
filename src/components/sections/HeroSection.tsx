@@ -32,7 +32,7 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <p className="text-base md:text-lg text-muted-foreground mb-8 tracking-wide">
-            AWS &nbsp;|&nbsp; Terraform &nbsp;|&nbsp; CI/CD &nbsp;
+            AWS &nbsp;|&nbsp; Terraform &nbsp;|&nbsp; Python &nbsp;|&nbsp; GitHub Actions &nbsp;|&nbsp; CI/CD
           </p>
         </motion.div>
         

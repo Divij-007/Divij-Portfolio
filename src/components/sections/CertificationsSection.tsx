@@ -1,11 +1,13 @@
-import { SiAmazonwebservices, SiAwsamplify } from "react-icons/si";
+import { SiAmazonwebservices } from "react-icons/si";
 import AnimatedSection from "../AnimatedSection";
-import { Award, ExternalLink, FileText} from "lucide-react";
+import { Award, ExternalLink, FileText } from "lucide-react";
 
 interface Certification {
   name: string;
   issuer: string;
-  date: string;
+  issued: string;
+  expires: string;
+  validationId: string;
   pdfUrl?: string;
   badgeColor: string;
 }
@@ -14,8 +16,10 @@ const certifications: Certification[] = [
   {
     name: "AWS Certified Cloud Practitioner",
     issuer: "Amazon Web Services",
-    date: "2025",
-    pdfUrl: "https://drive.google.com/file/d/1egh97bzKcJ1ZFwAjHXrvY4wk0QKCwO9J/view?usp=drive_link", // Replace with actual PDF URL
+    issued: "October 27, 2025",
+    expires: "October 27, 2028",
+    validationId: "7e8425e1dee2415faa2e11251f0c232d",
+    pdfUrl: "https://drive.google.com/file/d/1egh97bzKcJ1ZFwAjHXrvY4wk0QKCwO9J/view?usp=drive_link",
     badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   },
 ];
@@ -25,7 +29,7 @@ const CertificationsSection = () => {
     <AnimatedSection className="section-container">
       <h2 className="section-title">Certifications</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {certifications.map((cert, index) => (
+        {certifications.map((cert) => (
           <div
             key={cert.name}
             className="bg-card rounded-xl border border-border p-6 card-hover group"
@@ -36,13 +40,19 @@ const CertificationsSection = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-foreground mb-1">{cert.name}</h3>
-                <div className="flex items-center gap-2">
-              <SiAmazonwebservices className="w-4 h-4"/>
-              <p  className="text-sm text-muted-foreground mb-1">{cert.issuer}</p>
-            </div>
-                
-                <p className="text-xs text-muted-foreground mb-4">Issued {cert.date}</p>
-                
+                <div className="flex items-center gap-2 mb-1">
+                  <SiAmazonwebservices className="w-4 h-4" />
+                  <p className="text-sm text-muted-foreground">{cert.issuer}</p>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Issued: {cert.issued}
+                </p>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Expires: {cert.expires}
+                </p>
+                <p className="text-xs text-muted-foreground mb-4 font-mono">
+                  ID: {cert.validationId}
+                </p>
                 {cert.pdfUrl && (
                   <a
                     href={cert.pdfUrl}
@@ -60,7 +70,7 @@ const CertificationsSection = () => {
           </div>
         ))}
       </div>
-      
+
       <p className="mt-6 text-sm text-muted-foreground text-center">
         Additional certifications in progress
       </p>

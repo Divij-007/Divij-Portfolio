@@ -3,12 +3,13 @@ import { Briefcase, Calendar, MapPin } from "lucide-react";
 
 const ExperienceSection = () => {
   const responsibilities = [
-    "Monitored infrastructure alerts, investigated incidents, and provided remediation within defined SLAs.",
-    "Took initiative to improve alert signal-to-noise ratio by identifying false positives, tuning thresholds, and proposing alarm optimizations.",
-    "Collaborated with the development team to deploy new CloudWatch alarms via CI/CD pipelines and Terraform, ensuring consistent configurations across applications.",
-    "Analyzed AWS cost usage patterns and submitted optimization suggestions to reduce unnecessary resource consumption.",
-    "Worked cross-functionally to enhance observability for new applications through structured logging and metric instrumentation.",
-    "Currently upskilling in automation and Infrastructure as Code (Terraform, GitHub Actions/Jenkins) to transition into a DevOps role.",
+    "Logging, monitoring & alerting: Deployed CloudWatch alerts for servers, databases, and ECS clusters using Terraform and CI/CD pipelines with GitHub Actions.",
+    "Patch & AMI management: Verified SSM agent installation and configuration, AMI dates, private AMI usage, and security agent installation across environments.",
+    "CI/CD validation: Reviewed application team pipelines for compliance, including security checks such as absence of hardcoded credentials.",
+    "Backup & restore: Confirmed backup coverage for application servers; performed DR failover and snapshot-based restore activities to demonstrate recovery to application teams.",
+    "Technical change & incident management: Coordinated with application teams who handle changes and incidents through their own procedures.",
+    "Service transition: Completed operational readiness tasks and supported handover to application teams after hypercare.",
+    "Operational automation: Wrote Python scripts to extract and validate resource details across AWS accounts; built Lambda automations for notifications on unused cost-incurring resources, missing mandatory tags, and automatic CloudWatch alert resolution.",
   ];
 
   return (

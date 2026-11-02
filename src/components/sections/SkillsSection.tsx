@@ -1,6 +1,6 @@
 import AnimatedSection from "../AnimatedSection";
 import TechIcon from "../TechIcon";
-import { Cloud, GitBranch, Boxes, Activity, Terminal } from "lucide-react";
+import { Cloud, GitBranch, Boxes, Activity, Terminal, Code2 } from "lucide-react";
 
 interface SkillCategory {
   title: string;
@@ -14,11 +14,13 @@ const skillCategories: SkillCategory[] = [
     icon: <Cloud className="w-5 h-5" />,
     skills: [
       { name: "EC2", iconKey: "server" },
-      { name: "IAM", iconKey: "iam" },
+      { name: "RDS", iconKey: "storage" },
       { name: "S3", iconKey: "storage" },
-      { name: "SNS", iconKey: "alerting" },
+      { name: "Lambda", iconKey: "aws" },
       { name: "CloudWatch", iconKey: "monitoring" },
+      { name: "SNS", iconKey: "alerting" },
       { name: "VPC", iconKey: "network" },
+      { name: "IAM", iconKey: "iam" },
     ],
   },
   {
@@ -34,6 +36,14 @@ const skillCategories: SkillCategory[] = [
     icon: <Boxes className="w-5 h-5" />,
     skills: [
       { name: "Terraform", iconKey: "terraform" },
+    ],
+  },
+  {
+    title: "Scripting",
+    icon: <Code2 className="w-5 h-5" />,
+    skills: [
+      { name: "Python" },
+      { name: "AWS Lambda" },
     ],
   },
   {
