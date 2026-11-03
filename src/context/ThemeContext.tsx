@@ -42,7 +42,7 @@ function applyCSSVars(theme: Theme) {
   root.style.setProperty("--blur-intensity", `${theme.blurIntensity}px`);
   root.style.setProperty("--grain-intensity", `${theme.grainIntensity / 100}`);
   root.style.setProperty("--radius-base", `${theme.radius}rem`);
-  root.style.setProperty("--font-heading", `"${theme.fontHeading}", Georgia, serif`);
+  root.style.setProperty("--font-heading", `"${theme.fontHeading}", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`);
   root.style.setProperty("--font-body", `"${theme.fontBody}", system-ui, sans-serif`);
 }
 

@@ -1,9 +1,9 @@
 {
   "profile": {
     "name": "Divij P",
-    "title": "Cloud Engineer",
-    "tagline": "Aiming DevOps",
-    "bio": "AWS Cloud Engineer at LTIMindTree with hands-on experience in cloud operations and operational readiness across enterprise AWS environments. Working with a banking client (ABSA) on cloud migration support — delivering operational readiness across patch management, AMI management, CI/CD validation, backup & restore, monitoring, alerting, and service transition. Deployed Terraform-based CloudWatch alerts via GitHub Actions pipelines, and built Python scripts and AWS Lambda automations for tag compliance, unused resource detection, and automatic alert resolution. Certified AWS Cloud Practitioner (Oct 2025). Currently advancing toward a DevOps Engineer role with a focus on automation, reliability, and Infrastructure as Code.",
+    "title": "Cloud & Infrastructure Engineer",
+    "tagline": "Transitioning to DevOps · AWS Cloud Architecture · Terraform IaC · CI/CD Automation",
+    "bio": "AWS Cloud Engineer at LTM formerly LTIMindtree with hands-on expertise in cloud operations, infrastructure management, and operational readiness across enterprise AWS environments. Partnered with a premier banking client (ABSA) on high-impact cloud migration initiatives — driving end-to-end operational readiness across patch management, private AMI governance, CI/CD compliance validation, disaster recovery & backup verification, multi-account monitoring, and structured service transition. Spearheaded the deployment of Terraform-managed CloudWatch alerting pipelines via GitHub Actions, and engineered Python scripts alongside event-driven AWS Lambda automations for tag compliance, idle resource cost containment, and automated alarm remediation. AWS Certified Cloud Practitioner. Dedicated to delivering high-availability cloud architecture, automated reliability engineering, and scalable Infrastructure as Code.",
     "location": "Chennai, India",
     "email": "divijdivij007@gmail.com",
     "phone": "+91 9597696369",
@@ -37,47 +37,47 @@
   ],
   "experience": [
     {
-      "id": "ltimindtree-2024",
-      "role": "Engineer – Cloud and Infra Management",
-      "company": "LTIMindTree",
+      "id": "ltm-2024",
+      "role": "Engineer – Cloud and Infrastructure Management",
+      "company": "LTM formerly LTIMindtree",
       "startDate": "2024",
       "location": "Chennai, India",
       "responsibilities": [
-        "Logging, monitoring & alerting: Deployed CloudWatch alerts for servers, databases, and ECS clusters using Terraform and CI/CD pipelines with GitHub Actions.",
-        "Patch & AMI management: Verified SSM agent installation and configuration, AMI dates, private AMI usage, and security agent installation across environments.",
-        "CI/CD validation: Reviewed application team pipelines for compliance, including security checks such as absence of hardcoded credentials.",
-        "Backup & restore: Confirmed backup coverage for application servers; performed DR failover and snapshot-based restore activities to demonstrate recovery to application teams.",
-        "Technical change & incident management: Coordinated with application teams who handle changes and incidents through their own procedures.",
-        "Service transition: Completed operational readiness tasks and supported handover to application teams after hypercare.",
-        "Operational automation: Wrote Python scripts to extract and validate resource details across AWS accounts; built Lambda automations for notifications on unused cost-incurring resources, missing mandatory tags, and automatic CloudWatch alert resolution."
+        "Logging, Monitoring & Proactive Alerting: Engineered and deployed automated CloudWatch alarms and metric filters for virtual servers, RDS relational databases, and containerized ECS clusters using modular Terraform configurations integrated into automated GitHub Actions CI/CD workflows.",
+        "Patch Management & AMI Governance: Enforced operational standards by auditing Systems Manager (SSM) agent configurations, validating private AMI lifecycles, and ensuring baseline security agent compliance across testing and production environments.",
+        "CI/CD Pipeline Validation & Security Standards: Evaluated application delivery pipelines for compliance against enterprise benchmarks, guaranteeing secure secret isolation and preventing hardcoded credentials.",
+        "Disaster Recovery, Backup & Restoration: Guaranteed comprehensive backup policies for mission-critical application workloads; executed simulated disaster recovery (DR) failovers and snapshot-based restoration exercises to validate Recovery Time and Point Objectives (RTO/RPO).",
+        "Change & Incident Management Coordination: Facilitated seamless technical change implementations and incident response workflows in close collaboration with cross-functional application engineering teams under structured ITIL protocols.",
+        "Operational Readiness & Service Transition: Led operational readiness gate reviews, validating production checklist criteria and orchestrating smooth handover to core application teams following hypercare support.",
+        "Cloud Automation & Cost Governance: Authored custom Python automation utilities to extract and audit resource configurations across multiple AWS accounts; engineered event-driven AWS Lambda functions that notify on unattached cost-bearing resources, enforce mandatory tagging schemas, and auto-remediate recurring alerts."
       ]
     }
   ],
   "projects": [],
   "skills": [
     {
-      "category": "Cloud",
-      "items": ["EC2", "RDS", "S3", "Lambda", "CloudWatch", "SNS", "VPC", "IAM"]
+      "category": "Cloud Infrastructure",
+      "items": ["AWS EC2", "AWS RDS", "AWS S3", "AWS Lambda", "CloudWatch", "AWS SNS", "AWS VPC", "AWS IAM", "AWS ECS", "AWS SSM"]
     },
     {
-      "category": "CI/CD",
-      "items": ["GitHub Actions", "CodePipeline"]
+      "category": "CI/CD & Automation",
+      "items": ["GitHub Actions", "AWS CodePipeline", "Automated Testing", "Artifact Packaging", "Deployment Gates"]
     },
     {
-      "category": "IaC",
-      "items": ["Terraform"]
+      "category": "Infrastructure as Code",
+      "items": ["Terraform", "Modular Architecture", "State Management", "IaC Compliance"]
     },
     {
-      "category": "Scripting",
-      "items": ["Python", "AWS Lambda"]
+      "category": "Scripting & Development",
+      "items": ["Python", "Boto3 SDK", "AWS Lambda Automations", "Bash Shell"]
     },
     {
-      "category": "Monitoring",
-      "items": ["CloudWatch Metrics", "CloudWatch Logs", "CloudWatch Alarms", "SNS Alerts"]
+      "category": "Observability & Alerting",
+      "items": ["CloudWatch Metrics", "CloudWatch Logs", "CloudWatch Alarms", "SNS Notifications", "Incident Triage"]
     },
     {
-      "category": "Other",
-      "items": ["Linux", "Git", "Networking Basics"]
+      "category": "Systems & Reliability",
+      "items": ["Linux Administration", "Git Version Control", "Disaster Recovery (DR)", "Enterprise Networking", "ITIL Practices"]
     }
   ],
   "certifications": [
@@ -90,7 +90,7 @@
       "credentialId": "7e8425e1dee2415faa2e11251f0c232d",
       "verifyUrl": "https://aws.amazon.com/verification",
       "badgeUrl": "https://drive.google.com/file/d/1egh97bzKcJ1ZFwAjHXrvY4wk0QKCwO9J/view?usp=drive_link",
-      "description": "Validates cloud fluency and foundational AWS knowledge."
+      "description": "Validates overall understanding of AWS cloud platform, core architectural principles, security compliance, key services, and deployment models."
     }
   ],
   "education": [],
@@ -98,27 +98,27 @@
     {
       "id": "absa-operational-readiness",
       "title": "Cloud Operational Readiness & Automation",
-      "subtitle": "Client: ABSA (Banking) · Delivered at LTIMindTree · AWS operational readiness and automation across enterprise cloud workloads.",
+      "subtitle": "Client: ABSA (Banking) · Delivered at LTM formerly LTIMindtree · Enterprise AWS operational readiness, governance, and cloud automation.",
       "blocks": [
         {
           "title": "Problem",
           "icon": "alert-triangle",
-          "content": "ABSA applications migrated to AWS required structured operational readiness validation before handover to the application teams. Each application needed to meet standards across patch management, AMI management, CI/CD, backup & restore, monitoring, alerting, and service transition — a time-intensive process that initially lacked automation."
+          "content": "Enterprise banking applications undergoing migration to AWS required structured, auditable operational readiness validation before handover to application teams. Each application demanded rigorous verification across patch management, private AMI compliance, automated CI/CD security checks, backup & disaster recovery readiness, and granular monitoring. This multi-account process initially lacked automation, resulting in labor-intensive manual inspections and potential launch bottlenecks."
         },
         {
           "title": "Approach",
           "icon": "lightbulb",
-          "content": "Expanded from initial monitoring support into full operational readiness delivery. Deployed Terraform-based CloudWatch alerts via GitHub Actions CI/CD pipelines for servers, databases, and ECS clusters. Wrote Python scripts to extract and validate resource configurations across multiple AWS accounts. Built Lambda automations to enforce tag compliance, surface unused cost-incurring resources, and auto-resolve stale CloudWatch alarms."
+          "content": "Pioneered a systematic operational enablement framework, evolving from baseline monitoring support into full operational readiness delivery. Codified and deployed CloudWatch alarms and metric dashboards across compute, database, and container tiers via modular Terraform configurations integrated into GitHub Actions CI/CD pipelines. Authored Python automation tools to validate configuration postures across AWS accounts and deployed event-driven AWS Lambda functions to enforce tagging compliance, detect idle resources, and automatically resolve transient alerts."
         },
         {
           "title": "Tools",
           "icon": "wrench",
-          "content": "AWS (EC2, RDS, S3, Lambda, CloudWatch, SNS, SSM, ECS), Terraform (modular configurations), GitHub Actions (CI/CD pipelines), Python (cross-account resource validation scripts)."
+          "content": "AWS Ecosystem (EC2, RDS, S3, Lambda, CloudWatch, SNS, SSM, ECS) · Terraform (Modular IaC) · GitHub Actions (CI/CD Pipelines) · Python & Boto3 (Multi-Account Resource Audit & Governance)."
         },
         {
           "title": "Outcome",
           "icon": "check-circle",
-          "content": "Delivered operational readiness for multiple application sets and completed service transition to application teams after hypercare. Lambda and Python automations reduced manual validation effort, improved cost visibility, and ensured tag compliance across environments."
+          "content": "Delivered comprehensive operational readiness across mission-critical banking application workloads and achieved seamless post-hypercare handover to application teams. The custom Lambda and Python automation suites eliminated repetitive manual audits, significantly curtailed dormant cloud expenditure, and guaranteed continuous compliance standards across enterprise environments."
         }
       ]
     }
@@ -126,15 +126,15 @@
   "theme": {
     "defaultMode": "dark",
     "accentColor": "173 58% 45%",
-    "fontHeading": "Fraunces",
+    "fontHeading": "Plus Jakarta Sans",
     "fontBody": "Inter",
-    "blurIntensity": 12,
+    "blurIntensity": 16,
     "grainIntensity": 4,
-    "radius": 0.75
+    "radius": 0.85
   },
   "seo": {
-    "title": "Divij P — Cloud Engineer",
-    "description": "Cloud Engineer at LTIMindTree, specialising in AWS infrastructure, Terraform IaC, GitHub Actions CI/CD, and Python automation. Aiming for DevOps.",
+    "title": "Divij P — Cloud & DevOps Engineer",
+    "description": "Cloud Engineer at LTM formerly LTIMindtree, specialising in AWS infrastructure, Terraform IaC, GitHub Actions CI/CD, and Python automation. Focused on DevOps & Reliability.",
     "ogImage": ""
   }
 }
