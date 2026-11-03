@@ -1,52 +1,56 @@
-import AnimatedSection from "../AnimatedSection";
-import { Briefcase, Calendar, MapPin } from "lucide-react";
+import type { ExperienceItem } from "@/types/content";
+import { Briefcase, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const ExperienceSection = () => {
-  const responsibilities = [
-    "Logging, monitoring & alerting: Deployed CloudWatch alerts for servers, databases, and ECS clusters using Terraform and CI/CD pipelines with GitHub Actions.",
-    "Patch & AMI management: Verified SSM agent installation and configuration, AMI dates, private AMI usage, and security agent installation across environments.",
-    "CI/CD validation: Reviewed application team pipelines for compliance, including security checks such as absence of hardcoded credentials.",
-    "Backup & restore: Confirmed backup coverage for application servers; performed DR failover and snapshot-based restore activities to demonstrate recovery to application teams.",
-    "Technical change & incident management: Coordinated with application teams who handle changes and incidents through their own procedures.",
-    "Service transition: Completed operational readiness tasks and supported handover to application teams after hypercare.",
-    "Operational automation: Wrote Python scripts to extract and validate resource details across AWS accounts; built Lambda automations for notifications on unused cost-incurring resources, missing mandatory tags, and automatic CloudWatch alert resolution.",
-  ];
+interface ExperienceSectionProps {
+  experience: ExperienceItem[];
+}
+
+function formatDate(date: string | undefined): string {
+  if (!date) return "Present";
+  return date;
+}
+
+export function ExperienceSection({ experience }: ExperienceSectionProps) {
+  if (experience.length === 0) {
+    return <p className="text-sm text-muted-foreground">No experience listed yet.</p>;
+  }
 
   return (
-    <AnimatedSection className="section-container">
-      <h2 className="section-title">Experience</h2>
-      <div className="bg-card rounded-xl border border-border p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Briefcase className="w-5 h-5 text-accent" />
-              <h3 className="text-xl font-semibold text-foreground">Engineer - Cloud and Infra Management</h3>
+    <div className="space-y-6">
+      {experience.map((exp) => (
+        <article key={exp.id}>
+          <div className="flex items-start gap-3 mb-4">
+            <div className={cn("p-2 rounded-lg mt-0.5", "bg-[hsl(var(--accent-hsl))/10]")}>
+              <Briefcase className="w-4 h-4 text-[hsl(var(--accent-hsl))]" />
             </div>
-            <p className="text-muted-foreground font-medium">LTIMINDTREE</p>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-heading font-semibold text-foreground text-sm leading-snug">
+                {exp.role}
+              </h3>
+              <p className="text-xs text-[hsl(var(--accent-hsl))] font-medium mt-0.5">
+                {exp.company}
+              </p>
+              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground">
+                <span>{formatDate(exp.startDate)} – {formatDate(exp.endDate)}</span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  {exp.location}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span>2024 – Present</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              <span>Chennai</span>
-            </div>
-          </div>
-        </div>
-        
-        <ul className="space-y-3">
-          {responsibilities.map((item, index) => (
-            <li key={index} className="flex gap-3 text-muted-foreground text-justify">
-              <span className="text-accent mt-1.5 flex-shrink-0">•</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </AnimatedSection>
-  );
-};
 
-export default ExperienceSection;
+          <ul className="space-y-2 pl-1">
+            {exp.responsibilities.map((item, i) => (
+              <li key={i} className="flex gap-2.5 text-xs text-muted-foreground leading-relaxed">
+                <span className="text-[hsl(var(--accent-hsl))] mt-[3px] shrink-0">›</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  );
+}

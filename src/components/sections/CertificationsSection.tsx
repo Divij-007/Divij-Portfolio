@@ -1,81 +1,64 @@
-import { SiAmazonwebservices } from "react-icons/si";
-import AnimatedSection from "../AnimatedSection";
-import { Award, ExternalLink, FileText } from "lucide-react";
+import type { Certification } from "@/types/content";
+import { Award, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface Certification {
-  name: string;
-  issuer: string;
-  issued: string;
-  expires: string;
-  validationId: string;
-  pdfUrl?: string;
-  badgeColor: string;
+interface CertificationsSectionProps {
+  certifications: Certification[];
 }
 
-const certifications: Certification[] = [
-  {
-    name: "AWS Certified Cloud Practitioner",
-    issuer: "Amazon Web Services",
-    issued: "October 27, 2025",
-    expires: "October 27, 2028",
-    validationId: "7e8425e1dee2415faa2e11251f0c232d",
-    pdfUrl: "https://drive.google.com/file/d/1egh97bzKcJ1ZFwAjHXrvY4wk0QKCwO9J/view?usp=drive_link",
-    badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  },
-];
+export function CertificationsSection({ certifications }: CertificationsSectionProps) {
+  if (certifications.length === 0) {
+    return <p className="text-sm text-muted-foreground">No certifications listed yet.</p>;
+  }
 
-const CertificationsSection = () => {
   return (
-    <AnimatedSection className="section-container">
-      <h2 className="section-title">Certifications</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {certifications.map((cert) => (
-          <div
-            key={cert.name}
-            className="bg-card rounded-xl border border-border p-6 card-hover group"
-          >
-            <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-lg ${cert.badgeColor}`}>
-                <Award className="w-6 h-6" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground mb-1">{cert.name}</h3>
-                <div className="flex items-center gap-2 mb-1">
-                  <SiAmazonwebservices className="w-4 h-4" />
-                  <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Issued: {cert.issued}
-                </p>
-                <p className="text-xs text-muted-foreground mb-1">
-                  Expires: {cert.expires}
-                </p>
-                <p className="text-xs text-muted-foreground mb-4 font-mono">
-                  ID: {cert.validationId}
-                </p>
-                {cert.pdfUrl && (
-                  <a
-                    href={cert.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent/80 transition-colors"
-                  >
-                    <FileText className="w-4 h-4" />
-                    View Certificate
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+    <div className="space-y-4">
+      {certifications.map((cert) => (
+        <article
+          key={cert.id}
+          className={cn(
+            "rounded-xl p-4 border border-[hsl(var(--surface-border))]",
+            "bg-[hsl(var(--surface-glass))]",
+            "hover:border-[hsl(var(--accent-hsl))/30]",
+            "motion-safe-transition"
+          )}
+        >
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-amber-500/10 shrink-0">
+              <Award className="w-4 h-4 text-amber-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-heading font-semibold text-foreground text-sm leading-snug">
+                {cert.name}
+              </h3>
+              <p className="text-xs text-[hsl(var(--accent-hsl))] mt-0.5">{cert.issuer}</p>
+
+              <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
+                <p>Issued: {cert.issueDate}</p>
+                {cert.expiryDate && <p>Expires: {cert.expiryDate}</p>}
+                {cert.credentialId && (
+                  <p className="font-mono text-[10px] break-all">ID: {cert.credentialId}</p>
                 )}
               </div>
+
+              {cert.badgeUrl && (
+                <a
+                  href={cert.badgeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-3 text-xs text-[hsl(var(--accent-hsl))] hover:opacity-80 motion-safe-transition"
+                >
+                  View Certificate
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-
-      <p className="mt-6 text-sm text-muted-foreground text-center">
+        </article>
+      ))}
+      <p className="text-xs text-muted-foreground text-center pt-2">
         Additional certifications in progress
       </p>
-    </AnimatedSection>
+    </div>
   );
-};
-
-export default CertificationsSection;
+}

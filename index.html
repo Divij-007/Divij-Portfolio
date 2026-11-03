@@ -1,12 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Divij's Portfolio</title>
-    <meta name="description" content="Cloud Engineer transitioning to DevOps. Experienced in AWS infrastructure, Terraform IaC, CI/CD pipelines." />
-    <meta name="author" content="Cloud Engineer" />
-    <link rel="icon" type="image/png" href="public/favicon.png" />
+
+    <!-- SEO – dynamic values injected by ThemeEngine on mount -->
+    <title>Divij P — Cloud Engineer</title>
+    <meta name="description" content="Cloud Engineer at LTIMindTree, specialising in AWS infrastructure, Terraform IaC, GitHub Actions CI/CD, and Python automation. Aiming for DevOps." />
+    <meta name="author" content="Divij P" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Divij P — Cloud Engineer" />
+    <meta property="og:description" content="Cloud Engineer at LTIMindTree. AWS · Terraform · GitHub Actions · Python." />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Divij P — Cloud Engineer" />
+    <meta name="twitter:description" content="Cloud Engineer at LTIMindTree. AWS · Terraform · GitHub Actions · Python." />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Dark-mode flash prevention: read localStorage before React hydrates -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme-mode');
+          var mode = stored === 'light' ? 'light'
+                   : stored === 'dark'  ? 'dark'
+                   : window.matchMedia('(prefers-color-scheme: light)').matches ? 'light'
+                   : 'dark';
+          document.documentElement.classList.toggle('dark',  mode === 'dark');
+          document.documentElement.classList.toggle('light', mode === 'light');
+          document.documentElement.setAttribute('data-theme', mode);
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

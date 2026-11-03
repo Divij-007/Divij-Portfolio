@@ -1,77 +1,76 @@
-import { SiLinkedin } from "react-icons/si";
-import AnimatedSection from "../AnimatedSection";
+import type { Profile } from "@/types/content";
 import { Mail, Phone, Linkedin, Github, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface ContactItem {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  href: string;
-  external?: boolean;
+interface ContactSectionProps {
+  profile: Profile;
 }
 
-const contactItems: ContactItem[] = [
-  {
-    icon: <Mail className="w-5 h-5" />,
-    label: "Email",
-    value: "divijdivij007@gmail.com",
-    href: "mailto:divijdivij007@gmail.com",
-  },
-  {
-    icon: <Phone className="w-5 h-5" />,
-    label: "Phone",
-    value: "+91 9597696369",
-    href: "tel:+91 9597696369",
-  },
-  {
-    icon: <SiLinkedin className="w-5 h-5" />,
-    label: "LinkedIn",
-    value: "linkedin.com/in/divijp",
-    href: "https://www.linkedin.com/in/divijp",
-    external: true,
-  },
-  {
-    icon: <Github className="w-5 h-5" />,
-    label: "GitHub",
-    value: "github.com/Divij-007",
-    href: "https://github.com/Divij-007",
-    external: true,
-  },
-];
+export function ContactSection({ profile }: ContactSectionProps) {
+  const items = [
+    profile.email && {
+      label: "Email",
+      value: profile.email,
+      href: `mailto:${profile.email}`,
+      icon: <Mail className="w-4 h-4" />,
+      external: false,
+    },
+    profile.phone && {
+      label: "Phone",
+      value: profile.phone,
+      href: `tel:${profile.phone}`,
+      icon: <Phone className="w-4 h-4" />,
+      external: false,
+    },
+    ...profile.socials
+      .filter((s) => s.url.startsWith("http"))
+      .map((s) => ({
+        label: s.label,
+        value: s.url.replace(/^https?:\/\/(www\.)?/, ""),
+        href: s.url,
+        icon: s.icon === "linkedin" ? <Linkedin className="w-4 h-4" /> : s.icon === "github" ? <Github className="w-4 h-4" /> : <ExternalLink className="w-4 h-4" />,
+        external: true,
+      })),
+  ].filter(Boolean) as Array<{
+    label: string;
+    value: string;
+    href: string;
+    icon: React.ReactNode;
+    external: boolean;
+  }>;
 
-const ContactSection = () => {
   return (
-    <AnimatedSection className="section-container bg-secondary/30">
-      <h2 className="section-title text-center">Get In Touch</h2>
-      <p className="text-center text-muted-foreground mb-8 max-w-lg mx-auto">
-        Open to Cloud Engineer and DevOps Engineer opportunities. 
-        Feel free to reach out.
+    <div className="space-y-4">
+      <p className="text-xs text-muted-foreground leading-relaxed">
+        Open to Cloud Engineer and DevOps Engineer opportunities. Feel free to reach out.
       </p>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-        {contactItems.map((item) => (
+      <div className="grid grid-cols-1 gap-2">
+        {items.map((item) => (
           <a
             key={item.label}
             href={item.href}
             target={item.external ? "_blank" : undefined}
             rel={item.external ? "noopener noreferrer" : undefined}
-            className="flex items-center gap-4 bg-card rounded-xl border border-border p-4 card-hover group"
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-xl",
+              "border border-[hsl(var(--surface-border))]",
+              "hover:border-[hsl(var(--accent-hsl))/40] hover:bg-[hsl(var(--accent-hsl))/5]",
+              "group motion-safe-transition"
+            )}
           >
-            <span className="text-accent">{item.icon}</span>
+            <span className="text-muted-foreground group-hover:text-[hsl(var(--accent-hsl))] motion-safe-transition shrink-0">
+              {item.icon}
+            </span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground mb-0.5">{item.label}</p>
-              <p className="text-sm text-foreground truncate group-hover:text-accent transition-colors">
-                {item.value}
-              </p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.label}</p>
+              <p className="text-xs text-foreground truncate">{item.value}</p>
             </div>
             {item.external && (
-              <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+              <ExternalLink className="w-3 h-3 text-muted-foreground/50 group-hover:text-[hsl(var(--accent-hsl))] motion-safe-transition shrink-0" />
             )}
           </a>
         ))}
       </div>
-    </AnimatedSection>
+    </div>
   );
-};
-
-export default ContactSection;
+}

@@ -1,71 +1,58 @@
-import AnimatedSection from "../AnimatedSection";
-import { AlertTriangle, Lightbulb, Wrench, CheckCircle } from "lucide-react";
+import type { CaseStudy } from "@/types/content";
+import { AlertTriangle, Lightbulb, Wrench, CheckCircle, LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface CaseBlock {
-  icon: React.ReactNode;
-  title: string;
-  content: string;
+interface CaseStudySectionProps {
+  caseStudies: CaseStudy[];
 }
 
-const caseBlocks: CaseBlock[] = [
-  {
-    icon: <AlertTriangle className="w-6 h-6" />,
-    title: "Problem",
-    content:
-      "ABSA applications migrated to AWS required structured operational readiness validation before handover to the application teams. Each application needed to meet standards across patch management, AMI management, CI/CD, backup & restore, monitoring, alerting, and service transition — a time-intensive process that initially lacked automation.",
-  },
-  {
-    icon: <Lightbulb className="w-6 h-6" />,
-    title: "Approach",
-    content:
-      "Expanded from initial monitoring support into full operational readiness delivery. Deployed Terraform-based CloudWatch alerts via GitHub Actions CI/CD pipelines for servers, databases, and ECS clusters. Wrote Python scripts to extract and validate resource configurations across multiple AWS accounts. Built Lambda automations to enforce tag compliance, surface unused cost-incurring resources, and auto-resolve stale CloudWatch alarms.",
-  },
-  {
-    icon: <Wrench className="w-6 h-6" />,
-    title: "Tools",
-    content:
-      "AWS (EC2, RDS, S3, Lambda, CloudWatch, SNS, SSM, ECS), Terraform (modular configurations), GitHub Actions (CI/CD pipelines), Python (cross-account resource validation scripts).",
-  },
-  {
-    icon: <CheckCircle className="w-6 h-6" />,
-    title: "Outcome",
-    content:
-      "Delivered operational readiness for multiple application sets and completed service transition to application teams after hypercare. Lambda and Python automations reduced manual validation effort, improved cost visibility, and ensured tag compliance across environments.",
-  },
-];
-
-const CaseStudySection = () => {
-  return (
-    <AnimatedSection className="section-container bg-secondary/30">
-      <h2 className="section-title">Case Study</h2>
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-foreground mb-2">
-          Cloud Operational Readiness & Automation
-        </h3>
-        <p className="text-muted-foreground">
-          Client: ABSA (Banking) · Delivered at LTIMindTree · AWS operational readiness
-          and automation across enterprise cloud workloads.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {caseBlocks.map((block) => (
-          <div
-            key={block.title}
-            className="bg-card rounded-xl border border-border p-6 card-hover"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-accent">{block.icon}</span>
-              <h4 className="font-semibold text-foreground">{block.title}</h4>
-            </div>
-            <p className="text-muted-foreground text-sm leading-relaxed text-justify">
-              {block.content}
-            </p>
-          </div>
-        ))}
-      </div>
-    </AnimatedSection>
-  );
+const iconMap: Record<string, LucideIcon> = {
+  "alert-triangle": AlertTriangle,
+  lightbulb: Lightbulb,
+  wrench: Wrench,
+  "check-circle": CheckCircle,
 };
 
-export default CaseStudySection;
+export function CaseStudySection({ caseStudies }: CaseStudySectionProps) {
+  if (caseStudies.length === 0) {
+    return <p className="text-sm text-muted-foreground">No case studies listed yet.</p>;
+  }
+
+  return (
+    <div className="space-y-6">
+      {caseStudies.map((cs) => (
+        <div key={cs.id}>
+          <div className="mb-4">
+            <h3 className="font-heading font-semibold text-foreground text-sm leading-snug">
+              {cs.title}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{cs.subtitle}</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {cs.blocks.map((block) => {
+              const Icon = block.icon ? iconMap[block.icon] : null;
+              return (
+                <div
+                  key={block.title}
+                  className={cn(
+                    "rounded-xl p-4 border border-[hsl(var(--surface-border))]",
+                    "bg-[hsl(var(--surface-glass))]",
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {Icon && <Icon className="w-4 h-4 text-[hsl(var(--accent-hsl))] shrink-0" />}
+                    <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide">
+                      {block.title}
+                    </h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{block.content}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
