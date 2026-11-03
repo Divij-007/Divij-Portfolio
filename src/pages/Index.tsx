@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useContent } from "@/context/ContentContext";
 import { useTheme } from "@/context/ThemeContext";
 import {
@@ -24,6 +25,7 @@ import {
   Terminal,
   ShieldCheck,
   Server,
+  Lock,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -897,9 +899,18 @@ function Footer({ name }: { name: string }) {
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} {name}. Built with focus on cloud infrastructure & automation.
         </p>
-        <p className="text-xs text-muted-foreground/60 font-mono">
-          React 18 · Vite · Tailwind CSS · TypeScript
-        </p>
+        <div className="flex items-center gap-4 text-xs text-muted-foreground/60 font-mono">
+          <span>React 18 · Vite · Tailwind · TypeScript</span>
+          <span>·</span>
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-1 text-muted-foreground/50 hover:text-[hsl(var(--accent-hsl))] transition-colors"
+            title="Admin Login"
+          >
+            <Lock className="w-3 h-3" />
+            <span>Admin</span>
+          </Link>
+        </div>
       </div>
     </footer>
   );
