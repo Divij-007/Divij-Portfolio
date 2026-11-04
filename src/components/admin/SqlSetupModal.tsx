@@ -31,22 +31,24 @@ FOR SELECT
 TO public
 USING (true);
 
--- 4. Authenticated admin update policy (only logged in admin can edit content)
+-- 4. Authorized admin update policy (only verified admin email can modify content)
 DROP POLICY IF EXISTS "Allow authenticated users to update" ON public.portfolio_content;
-CREATE POLICY "Allow authenticated users to update"
+DROP POLICY IF EXISTS "Allow authorized admin update" ON public.portfolio_content;
+CREATE POLICY "Allow authorized admin update"
 ON public.portfolio_content
 FOR UPDATE
 TO authenticated
-USING (true)
-WITH CHECK (true);
+USING (auth.jwt() ->> 'email' = 'divijdivij007@gmail.com')
+WITH CHECK (auth.jwt() ->> 'email' = 'divijdivij007@gmail.com');
 
--- 5. Authenticated admin insert policy
+-- 5. Authorized admin insert policy (only verified admin email can insert content)
 DROP POLICY IF EXISTS "Allow authenticated users to insert" ON public.portfolio_content;
-CREATE POLICY "Allow authenticated users to insert"
+DROP POLICY IF EXISTS "Allow authorized admin insert" ON public.portfolio_content;
+CREATE POLICY "Allow authorized admin insert"
 ON public.portfolio_content
 FOR INSERT
 TO authenticated
-WITH CHECK (true);
+WITH CHECK (auth.jwt() ->> 'email' = 'divijdivij007@gmail.com');
 
 -- 6. Enable Realtime websocket replication across devices
 DO $$

@@ -2,10 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import type { SiteContent } from "@/types/content";
 
 const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL || "https://usalopghptthamlszjmi.supabase.co";
+  import.meta.env.VITE_SUPABASE_URL || "https://placeholder-project.supabase.co";
 const supabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzYWxvcGdocHR0aGFtbHN6am1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2OTA2NDksImV4cCI6MjEwOTI2NjY0OX0.zaByZUaNBAaOVx9Ut5H59LHoJoBU6R6mwlMEVStd5Fk";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {

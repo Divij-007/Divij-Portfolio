@@ -78,17 +78,19 @@ The user's choice is persisted in `localStorage` and respects `prefers-color-sch
 2. Vercel auto-deploys on push
 3. `vercel.json` handles SPA client-side routing rewrites
 
-### Environment variables (Phase 1)
-None required.
-
-### Environment variables (Phase 2 — Admin CMS)
-See `PHASE2-SETUP.md` (added in Phase 2).
+### Environment variables
+Copy `.env.example` to `.env` if customizing Supabase credentials or admin authorization:
+- `VITE_SUPABASE_URL`: Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Supabase anon public API key
+- `VITE_ADMIN_EMAIL`: Whitelisted administrator email address (default: `divijdivij007@gmail.com`)
 
 ---
 
-## Phase 2 (Admin CMS — coming)
+## Admin CMS Portal
 
-- Supabase Auth + Postgres + Storage
-- `/admin` route (noindex, auth-guarded)
-- Live preview, draft/publish, CRUD for all content
-- Full setup guide will be in `PHASE2-SETUP.md`
+- Access at `/admin` (disallowed from search indexing via `public/robots.txt`).
+- **Authorization Guard**: Restricted strictly to authorized administrator email (`divijdivij007@gmail.com`). Unauthorized sign-ins are instantly locked out.
+- **Zero-Downtime Resilience**: Hybrid fallback loads bundled `content.json` automatically if Supabase is offline, unreachable, or in cold start.
+- **Real-Time Synchronisation**: Uses `BroadcastChannel` and local caching to instantly synchronize edits across multiple tabs without manual page reload.
+- **Factory Reset**: Protected by a type-to-confirm modal requiring the user to type `RESET` to restore initial baseline configurations.
+- **Performance**: Code-split via `React.lazy` and chunked with Rollup so visitors only download the public portfolio bundle without loading Admin code.
