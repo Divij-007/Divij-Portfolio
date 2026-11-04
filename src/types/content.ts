@@ -2,9 +2,67 @@ import { z } from "zod";
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
+// Helper to allow empty string or valid URL (with or without protocol)
+export const optionalUrlSchema = z
+  .string()
+  .optional()
+  .transform((val) => {
+    if (!val || val.trim() === "") return "";
+    const trimmed = val.trim();
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("mailto:") ||
+      trimmed.startsWith("tel:")
+    ) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  })
+  .refine(
+    (val) => {
+      if (!val) return true;
+      try {
+        new URL(val);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { message: "Invalid URL format" }
+  );
+
+export const socialUrlSchema = z
+  .string()
+  .transform((val) => {
+    if (!val || val.trim() === "") return "";
+    const trimmed = val.trim();
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("mailto:") ||
+      trimmed.startsWith("tel:")
+    ) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  })
+  .refine(
+    (val) => {
+      if (!val) return false;
+      try {
+        new URL(val);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { message: "Invalid URL format" }
+  );
+
 export const SocialSchema = z.object({
   label: z.string(),
-  url: z.string().url(),
+  url: socialUrlSchema,
   icon: z.string(), // lucide or react-icons key string
 });
 
@@ -42,8 +100,8 @@ export const ProjectSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
-  url: z.string().url().optional(),
-  repoUrl: z.string().url().optional(),
+  url: optionalUrlSchema,
+  repoUrl: optionalUrlSchema,
   tags: z.array(z.string()),
 });
 
@@ -59,8 +117,8 @@ export const CertificationSchema = z.object({
   issueDate: z.string(),
   expiryDate: z.string().optional(),
   credentialId: z.string().optional(),
-  verifyUrl: z.string().url().optional(),
-  badgeUrl: z.string().optional(),
+  verifyUrl: optionalUrlSchema,
+  badgeUrl: optionalUrlSchema,
   description: z.string().optional(),
 });
 

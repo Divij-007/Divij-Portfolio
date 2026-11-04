@@ -143,7 +143,7 @@ export function ThemeEditor({ theme, onChange }: ThemeEditorProps) {
             <select
               value={theme.fontHeading}
               onChange={(e) => updateField("fontHeading", e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none focus:border-[hsl(var(--accent-hsl))]"
+              className="w-full px-3 py-2 rounded-xl text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none focus:border-[hsl(var(--accent-hsl))] [&>option]:bg-[hsl(var(--bg))] [&>option]:text-foreground"
             >
               {HEADING_FONTS.map((font) => (
                 <option key={font} value={font}>
@@ -160,7 +160,7 @@ export function ThemeEditor({ theme, onChange }: ThemeEditorProps) {
             <select
               value={theme.fontBody}
               onChange={(e) => updateField("fontBody", e.target.value)}
-              className="w-full px-3 py-2 rounded-xl text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none focus:border-[hsl(var(--accent-hsl))]"
+              className="w-full px-3 py-2 rounded-xl text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none focus:border-[hsl(var(--accent-hsl))] [&>option]:bg-[hsl(var(--bg))] [&>option]:text-foreground"
             >
               {BODY_FONTS.map((font) => (
                 <option key={font} value={font}>

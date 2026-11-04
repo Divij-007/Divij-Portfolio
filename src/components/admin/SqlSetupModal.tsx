@@ -47,6 +47,17 @@ ON public.portfolio_content
 FOR INSERT
 TO authenticated
 WITH CHECK (true);
+
+-- 6. Enable Realtime websocket replication across devices
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'portfolio_content'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.portfolio_content;
+  END IF;
+END $$;
 `;
 
 export function SqlSetupModal({ isOpen, onClose, onRecheck }: SqlSetupModalProps) {

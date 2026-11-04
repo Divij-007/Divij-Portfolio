@@ -34,6 +34,7 @@ function applyModeToDOM(mode: ThemeMode) {
   root.classList.toggle("dark", mode === "dark");
   root.classList.toggle("light", mode === "light");
   root.setAttribute("data-theme", mode);
+  root.style.colorScheme = mode;
 }
 
 function applyCSSVars(theme: Theme) {

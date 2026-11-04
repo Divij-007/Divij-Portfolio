@@ -13,6 +13,7 @@ import { ProjectsEditor } from "@/components/admin/ProjectsEditor";
 import { ThemeEditor } from "@/components/admin/ThemeEditor";
 import { SeoEditor } from "@/components/admin/SeoEditor";
 import { SqlSetupModal } from "@/components/admin/SqlSetupModal";
+import { ResetConfirmModal } from "@/components/admin/ResetConfirmModal";
 import {
   Lock,
   Mail,
@@ -32,7 +33,6 @@ import {
   Code2,
   Palette,
   Globe,
-  CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -61,6 +61,17 @@ const TABS: { id: AdminTab; label: string; icon: React.ComponentType<{ className
   { id: "seo", label: "SEO & Database", icon: Globe },
 ];
 
+// Authorized administrator emails
+const AUTHORIZED_ADMIN_EMAILS = [
+  "divijdivij007@gmail.com",
+  ...(import.meta.env.VITE_ADMIN_EMAIL ? [import.meta.env.VITE_ADMIN_EMAIL.toLowerCase()] : []),
+];
+
+const isAuthorizedAdmin = (email?: string | null) => {
+  if (!email) return false;
+  return AUTHORIZED_ADMIN_EMAILS.some((adm) => adm.toLowerCase() === email.trim().toLowerCase());
+};
+
 export default function Admin() {
   const { user, loading: authLoading, signIn, signUp, signOut } = useAuth();
   const { content, loading: contentLoading, isRemote, saveContent, resetToDefault, reloadContent } = useContent();
@@ -78,6 +89,7 @@ export default function Admin() {
   const [draft, setDraft] = useState<SiteContent | null>(null);
   const [saving, setSaving] = useState(false);
   const [sqlModalOpen, setSqlModalOpen] = useState(false);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
 
   // Sync draft whenever content is loaded or updated
   useEffect(() => {
@@ -100,10 +112,20 @@ export default function Admin() {
       if (res.error) {
         setAuthError(res.error);
         toast.error(res.error);
+      } else if (!isAuthorizedAdmin(email)) {
+        await signOut();
+        setAuthError("Access restricted: This email is not authorized as an administrator.");
+        toast.error("Unauthorized email address.");
       } else {
         toast.success("Welcome back, Admin!");
       }
     } else {
+      if (!isAuthorizedAdmin(email)) {
+        setAuthError("Registration restricted: Only designated administrators can create an account.");
+        toast.error("Unauthorized email address.");
+        setAuthSubmitting(false);
+        return;
+      }
       const res = await signUp(email, password);
       if (res.error) {
         setAuthError(res.error);
@@ -124,7 +146,7 @@ export default function Admin() {
       toast.success("Portfolio changes saved successfully!");
     } else {
       toast.error(
-        `Failed to persist to Supabase: ${result.error}. (Make sure you have run the SQL script to create the table).`
+        `Failed to persist: ${result.error || "Unknown error"}. Check console for details.`
       );
     }
     setSaving(false);
@@ -138,12 +160,15 @@ export default function Admin() {
     }
   };
 
-  // Reset to default bundled content
-  const handleReset = async () => {
-    if (window.confirm("Are you sure you want to reset all portfolio content to factory defaults?")) {
-      await resetToDefault();
-      if (content) setDraft(JSON.parse(JSON.stringify(content)));
-      toast.success("Reset to default configuration.");
+  // Reset to default bundled content (invoked after confirmation)
+  const handleExecuteReset = async () => {
+    try {
+      const defaultData = await resetToDefault();
+      setDraft(JSON.parse(JSON.stringify(defaultData)));
+      toast.success("Factory defaults restored successfully!");
+    } catch (err) {
+      console.error("Failed to reset to default:", err);
+      toast.error("Failed to reset to default configuration.");
     }
   };
 
@@ -180,7 +205,7 @@ export default function Admin() {
               Admin Portal
             </h1>
             <p className="text-xs text-muted-foreground">
-              Sign in with your credentials to edit your portfolio in real time.
+              Sign in with your admin credentials to manage and update your portfolio.
             </p>
           </div>
 
@@ -226,6 +251,12 @@ export default function Admin() {
             </div>
           )}
 
+          {authMode === "signup" && (
+            <div className="p-3 rounded-xl bg-[hsl(var(--surface-border))/25] border border-[hsl(var(--surface-border))] text-[11px] text-muted-foreground">
+              Notice: Account registration is restricted to the authorized administrator (<span className="text-foreground font-mono">divijdivij007@gmail.com</span>).
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             <div>
@@ -262,7 +293,7 @@ export default function Admin() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="p-1 text-muted-foreground hover:text-foreground absolute right-3 top-2.5"
+                  className="absolute right-3.5 top-3 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -273,29 +304,21 @@ export default function Admin() {
               type="submit"
               disabled={authSubmitting}
               className={cn(
-                "w-full py-3 rounded-xl text-sm font-bold tracking-wide",
-                "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))]",
-                "shadow-lg shadow-[hsl(var(--accent-hsl))/25] hover:opacity-95 transition-all",
-                authSubmitting && "opacity-70 cursor-not-allowed"
+                "w-full py-3 rounded-xl font-bold text-xs tracking-wider uppercase transition-all mt-2",
+                "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))] hover:opacity-95 shadow-lg shadow-[hsl(var(--accent-hsl))/20]",
+                authSubmitting && "opacity-50 cursor-not-allowed"
               )}
             >
               {authSubmitting
-                ? "Verifying..."
+                ? "Authenticating..."
                 : authMode === "signin"
-                ? "Enter Admin Dashboard"
-                : "Register Admin Account"}
+                ? "Sign In"
+                : "Create Admin Account"}
             </button>
           </form>
 
-          {/* Database Info pill */}
-          <div className="pt-2 text-center">
-            <p className="text-[11px] text-muted-foreground/70">
-              Connected to Supabase Project: <span className="font-mono text-foreground/80">usalopghptthamlszjmi</span>
-            </p>
-          </div>
-
-          {/* Back to site */}
-          <div className="pt-2 text-center border-t border-[hsl(var(--surface-border))]">
+          {/* Footer note */}
+          <div className="text-center pt-2">
             <Link
               to="/"
               className="text-xs text-muted-foreground hover:text-foreground hover:underline inline-flex items-center gap-1 font-medium transition-colors"
@@ -308,17 +331,51 @@ export default function Admin() {
     );
   }
 
-  // ─── DASHBOARD WORKSPACE (AUTHENTICATED) ──────────────────────────────────────
+  // ─── ACCESS CONTROL GUARD (AUTHENTICATED BUT NOT AUTHORIZED) ─────────────────
+  if (user && !isAuthorizedAdmin(user.email)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-[hsl(var(--bg))] relative selection:bg-[hsl(var(--accent-hsl))/30]">
+        <div className="color-field" aria-hidden="true" />
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="relative w-full max-w-md p-8 sm:p-10 rounded-3xl border border-rose-500/30 bg-rose-500/5 backdrop-blur-2xl shadow-2xl text-center space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h2 className="font-heading font-black text-2xl text-foreground">Access Restricted</h2>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            The account <span className="font-mono text-foreground font-semibold">{user.email}</span> does not have administrative privileges for this portfolio.
+          </p>
+          <div className="pt-2 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={signOut}
+              className="w-full py-2.5 rounded-xl text-xs font-semibold bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors"
+            >
+              Sign Out & Log In As Administrator
+            </button>
+            <Link
+              to="/"
+              className="text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors"
+            >
+              ← Back to Portfolio
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── DASHBOARD WORKSPACE (AUTHENTICATED & AUTHORIZED) ────────────────────────
   if (!draft) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[hsl(var(--bg))]">
         <div className="w-8 h-8 rounded-full border-2 border-[hsl(var(--accent-hsl))] border-t-transparent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--bg))] text-foreground font-sans antialiased selection:bg-[hsl(var(--accent-hsl))/30] pb-24">
+    <div className="min-h-screen bg-[hsl(var(--bg))] text-foreground font-sans antialiased selection:bg-[hsl(var(--accent-hsl))/30]">
       {/* Background elements */}
       <div className="color-field" aria-hidden="true" />
       <div className="grain-overlay" aria-hidden="true" />
@@ -330,9 +387,16 @@ export default function Admin() {
         onRecheck={reloadContent}
       />
 
+      {/* Factory Reset Confirmation Modal (requires typing RESET) */}
+      <ResetConfirmModal
+        isOpen={resetModalOpen}
+        onClose={() => setResetModalOpen(false)}
+        onConfirm={handleExecuteReset}
+      />
+
       {/* Top Floating Header */}
       <header className="sticky top-0 z-40 bg-[hsl(var(--surface-glass))] backdrop-blur-2xl border-b border-[hsl(var(--surface-border))] shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
           {/* Brand & status */}
           <div className="flex items-center gap-3">
             <Link
@@ -360,15 +424,15 @@ export default function Admin() {
             </span>
           </div>
 
-          {/* Center actions: Live preview & SQL */}
-          <div className="flex items-center gap-2">
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               type="button"
               onClick={() => setSqlModalOpen(true)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] text-foreground hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] text-foreground hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
             >
               <Database className="w-3.5 h-3.5 text-[hsl(var(--accent-hsl))]" />
-              <span className="hidden md:inline">SQL Schema</span>
+              <span>SQL Schema</span>
             </button>
 
             <Link
@@ -377,13 +441,10 @@ export default function Admin() {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] text-foreground hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
             >
-              <span>View Portfolio</span>
+              <span className="hidden xs:inline">Preview</span>
               <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
             </Link>
-          </div>
 
-          {/* Right Action Buttons */}
-          <div className="flex items-center gap-2.5">
             {isDirty && (
               <button
                 type="button"
@@ -422,9 +483,9 @@ export default function Admin() {
           </div>
         </div>
 
-        {/* Tab Strip */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-none border-t border-[hsl(var(--surface-border))/40]">
-          <nav className="flex items-center gap-1 py-1.5 min-w-max">
+        {/* Mobile Horizontal Section Tabs (screens < md) */}
+        <div className="md:hidden overflow-x-auto scrollbar-none border-t border-[hsl(var(--surface-border))/40] px-3 py-1.5 bg-[hsl(var(--surface-glass))]">
+          <nav className="flex items-center gap-1 min-w-max">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -433,10 +494,10 @@ export default function Admin() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0",
                     isActive
-                      ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] shadow-xs"
-                      : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/40]"
+                      ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))]"
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -448,90 +509,172 @@ export default function Admin() {
         </div>
       </header>
 
-      {/* Main Form Body */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-8">
-        {activeTab === "profile" && (
-          <ProfileEditor
-            profile={draft.profile}
-            onChange={(updated) => setDraft({ ...draft, profile: updated })}
-          />
-        )}
+      {/* Main Container: Left Sidebar + Right Editor Body */}
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
+        {/* Left Sidebar (Desktop md+) */}
+        <aside className="hidden md:flex flex-col justify-between w-64 lg:w-72 shrink-0 border-r border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))/40] backdrop-blur-xl p-4 sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto">
+          <div className="space-y-6">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-2">
+                Content Sections
+              </p>
+              <nav className="space-y-1">
+                {TABS.slice(0, 7).map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-left group",
+                        isActive
+                          ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] font-bold shadow-xs border border-[hsl(var(--accent-hsl))/30]"
+                          : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/40]"
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          "w-4 h-4 shrink-0 transition-transform group-hover:scale-110",
+                          isActive ? "text-[hsl(var(--accent-hsl))]" : "text-muted-foreground"
+                        )}
+                      />
+                      <span className="flex-1 truncate">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
 
-        {activeTab === "sections" && (
-          <SectionsEditor
-            sections={draft.sections}
-            onChange={(updated) => setDraft({ ...draft, sections: updated })}
-          />
-        )}
-
-        {activeTab === "experience" && (
-          <ExperienceEditor
-            experience={draft.experience}
-            onChange={(updated) => setDraft({ ...draft, experience: updated })}
-          />
-        )}
-
-        {activeTab === "skills" && (
-          <SkillsEditor
-            skills={draft.skills}
-            onChange={(updated) => setDraft({ ...draft, skills: updated })}
-          />
-        )}
-
-        {activeTab === "case-study" && (
-          <CaseStudyEditor
-            caseStudies={draft.caseStudies}
-            onChange={(updated) => setDraft({ ...draft, caseStudies: updated })}
-          />
-        )}
-
-        {activeTab === "certifications" && (
-          <CertificationsEditor
-            certifications={draft.certifications}
-            onChange={(updated) => setDraft({ ...draft, certifications: updated })}
-          />
-        )}
-
-        {activeTab === "projects" && (
-          <ProjectsEditor
-            projects={draft.projects}
-            onChange={(updated) => setDraft({ ...draft, projects: updated })}
-          />
-        )}
-
-        {activeTab === "theme" && (
-          <ThemeEditor
-            theme={draft.theme}
-            onChange={(updated) => setDraft({ ...draft, theme: updated })}
-          />
-        )}
-
-        {activeTab === "seo" && (
-          <SeoEditor
-            seo={draft.seo}
-            onChange={(updated) => setDraft({ ...draft, seo: updated })}
-            onOpenSqlModal={() => setSqlModalOpen(true)}
-            onSeedData={handleSeedData}
-          />
-        )}
-
-        {/* Bottom Safety Reset Bar */}
-        <div className="mt-12 pt-6 border-t border-[hsl(var(--surface-border))] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span>Signed in as:</span>
-            <span className="font-mono text-foreground font-semibold">{user.email}</span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-2">
+                Settings & Style
+              </p>
+              <nav className="space-y-1">
+                {TABS.slice(7).map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-left group",
+                        isActive
+                          ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] font-bold shadow-xs border border-[hsl(var(--accent-hsl))/30]"
+                          : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/40]"
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          "w-4 h-4 shrink-0 transition-transform group-hover:scale-110",
+                          isActive ? "text-[hsl(var(--accent-hsl))]" : "text-muted-foreground"
+                        )}
+                      />
+                      <span className="flex-1 truncate">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleReset}
-            className="flex items-center gap-1.5 text-rose-400 hover:text-rose-300 hover:underline transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset All Portfolio Content to Factory Defaults</span>
-          </button>
-        </div>
-      </main>
+          {/* Sidebar Footer info */}
+          <div className="pt-4 mt-6 border-t border-[hsl(var(--surface-border))/60] space-y-3">
+            <div className="px-3">
+              <p className="text-[10px] text-muted-foreground uppercase font-semibold">Logged In As</p>
+              <p className="text-xs font-mono text-foreground truncate font-medium">{user.email}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setResetModalOpen(true)}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Factory Reset</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* Right Editor Body */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-4xl pb-24">
+          <div className="mb-6 pb-4 border-b border-[hsl(var(--surface-border))] flex items-center justify-between">
+            <div>
+              <h2 className="font-heading font-black text-2xl text-foreground capitalize">
+                {TABS.find((t) => t.id === activeTab)?.label}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Update details below and click "Save Changes" to publish live.
+              </p>
+            </div>
+          </div>
+
+          {activeTab === "profile" && (
+            <ProfileEditor
+              profile={draft.profile}
+              onChange={(updated) => setDraft({ ...draft, profile: updated })}
+            />
+          )}
+
+          {activeTab === "sections" && (
+            <SectionsEditor
+              sections={draft.sections}
+              onChange={(updated) => setDraft({ ...draft, sections: updated })}
+            />
+          )}
+
+          {activeTab === "experience" && (
+            <ExperienceEditor
+              experience={draft.experience}
+              onChange={(updated) => setDraft({ ...draft, experience: updated })}
+            />
+          )}
+
+          {activeTab === "skills" && (
+            <SkillsEditor
+              skills={draft.skills}
+              onChange={(updated) => setDraft({ ...draft, skills: updated })}
+            />
+          )}
+
+          {activeTab === "case-study" && (
+            <CaseStudyEditor
+              caseStudies={draft.caseStudies}
+              onChange={(updated) => setDraft({ ...draft, caseStudies: updated })}
+            />
+          )}
+
+          {activeTab === "certifications" && (
+            <CertificationsEditor
+              certifications={draft.certifications}
+              onChange={(updated) => setDraft({ ...draft, certifications: updated })}
+            />
+          )}
+
+          {activeTab === "projects" && (
+            <ProjectsEditor
+              projects={draft.projects}
+              onChange={(updated) => setDraft({ ...draft, projects: updated })}
+            />
+          )}
+
+          {activeTab === "theme" && (
+            <ThemeEditor
+              theme={draft.theme}
+              onChange={(updated) => setDraft({ ...draft, theme: updated })}
+            />
+          )}
+
+          {activeTab === "seo" && (
+            <SeoEditor
+              seo={draft.seo}
+              onChange={(updated) => setDraft({ ...draft, seo: updated })}
+              onOpenSqlModal={() => setSqlModalOpen(true)}
+              onSeedData={handleSeedData}
+            />
+          )}
+        </main>
+      </div>
     </div>
   );
 }

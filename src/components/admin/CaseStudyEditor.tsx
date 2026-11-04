@@ -213,7 +213,7 @@ export function CaseStudyEditor({ caseStudies, onChange }: CaseStudyEditorProps)
                                 icon: e.target.value,
                               })
                             }
-                            className="px-2 py-1 rounded-lg text-xs bg-[hsl(var(--surface-border))/30] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none"
+                            className="px-2 py-1 rounded-lg text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none [&>option]:bg-[hsl(var(--bg))] [&>option]:text-foreground"
                           >
                             {AVAILABLE_ICONS.map((ic) => (
                               <option key={ic.value} value={ic.value}>

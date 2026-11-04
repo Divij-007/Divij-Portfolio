@@ -12,6 +12,7 @@
 
 /* ─── Design tokens ───────────────────────────────────────────────────────── */
 :root {
+  color-scheme: light;
   /* Accent – overridable by ThemeEngine */
   --accent-hsl: 173 58% 45%;
 
@@ -63,6 +64,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   /* Dark mode palette – slightly lighter refined warm charcoal */
   --bg: 28 8% 13.5%;
   --bg-subtle: 28 7% 17%;
@@ -121,6 +123,43 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+  }
+
+  /* Custom scrollbar across entire app */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--surface-border) / 0.8) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--surface-border) / 0.8);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--fg-muted) / 0.6);
+  }
+
+  /* Form control dropdown styles for cross-browser dark mode readability */
+  select {
+    color-scheme: light dark;
+  }
+  .dark select {
+    color-scheme: dark;
+  }
+  select option {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--fg));
+    padding: 6px 10px;
+  }
+  .dark select option {
+    background-color: #242220 !important;
+    color: #f7f5f2 !important;
   }
 
   /* Custom thin scrollbar for panel containers */

@@ -22,7 +22,7 @@ export function ProfileEditor({ profile, onChange }: ProfileEditorProps) {
   const addSocial = () => {
     const newSocial: Social = {
       label: "New Link",
-      url: "https://",
+      url: "https://example.com",
       icon: "globe",
     };
     onChange({ ...profile, socials: [...profile.socials, newSocial] });
@@ -196,7 +196,7 @@ export function ProfileEditor({ profile, onChange }: ProfileEditorProps) {
                 <select
                   value={social.icon}
                   onChange={(e) => updateSocial(index, { ...social, icon: e.target.value })}
-                  className="px-2.5 py-2 rounded-lg text-xs bg-[hsl(var(--surface-border))/30] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none"
+                  className="px-2.5 py-2 rounded-lg text-xs bg-[hsl(var(--bg))] border border-[hsl(var(--surface-border))] text-foreground focus:outline-none [&>option]:bg-[hsl(var(--bg))] [&>option]:text-foreground"
                 >
                   {COMMON_ICONS.map((ic) => (
                     <option key={ic} value={ic}>
