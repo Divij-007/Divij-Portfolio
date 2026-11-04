@@ -1,99 +1,40 @@
-import AnimatedSection from "../AnimatedSection";
-import TechIcon from "../TechIcon";
-import { Cloud, GitBranch, Boxes, Activity, Terminal, Code2 } from "lucide-react";
+import type { SkillGroup } from "@/types/content";
+import { cn } from "@/lib/utils";
 
-interface SkillCategory {
-  title: string;
-  icon: React.ReactNode;
-  skills: { name: string; iconKey?: string }[];
+interface SkillsSectionProps {
+  skills: SkillGroup[];
 }
 
-const skillCategories: SkillCategory[] = [
-  {
-    title: "Cloud",
-    icon: <Cloud className="w-5 h-5" />,
-    skills: [
-      { name: "EC2", iconKey: "server" },
-      { name: "RDS", iconKey: "storage" },
-      { name: "S3", iconKey: "storage" },
-      { name: "Lambda", iconKey: "aws" },
-      { name: "CloudWatch", iconKey: "monitoring" },
-      { name: "SNS", iconKey: "alerting" },
-      { name: "VPC", iconKey: "network" },
-      { name: "IAM", iconKey: "iam" },
-    ],
-  },
-  {
-    title: "CI/CD",
-    icon: <GitBranch className="w-5 h-5" />,
-    skills: [
-      { name: "GitHub Actions", iconKey: "github-actions" },
-      { name: "CodePipeline", iconKey: "aws" },
-    ],
-  },
-  {
-    title: "IaC",
-    icon: <Boxes className="w-5 h-5" />,
-    skills: [
-      { name: "Terraform", iconKey: "terraform" },
-    ],
-  },
-  {
-    title: "Scripting",
-    icon: <Code2 className="w-5 h-5" />,
-    skills: [
-      { name: "Python" },
-      { name: "AWS Lambda" },
-    ],
-  },
-  {
-    title: "Monitoring",
-    icon: <Activity className="w-5 h-5" />,
-    skills: [
-      { name: "CloudWatch Metrics" },
-      { name: "CloudWatch Logs" },
-      { name: "CloudWatch Alarms" },
-      { name: "SNS Alerts" },
-    ],
-  },
-  {
-    title: "Other",
-    icon: <Terminal className="w-5 h-5" />,
-    skills: [
-      { name: "Linux", iconKey: "linux" },
-      { name: "Git", iconKey: "git" },
-      { name: "Networking Basics", iconKey: "network" },
-    ],
-  },
-];
+export function SkillsSection({ skills }: SkillsSectionProps) {
+  if (skills.length === 0) {
+    return <p className="text-sm text-muted-foreground">No skills listed yet.</p>;
+  }
 
-const SkillsSection = () => {
   return (
-    <AnimatedSection className="section-container bg-secondary/30">
-      <h2 className="section-title">Skills</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {skillCategories.map((category, index) => (
-          <div
-            key={category.title}
-            className="bg-card rounded-xl p-6 border border-border card-hover"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-accent">{category.icon}</span>
-              <h3 className="font-semibold text-foreground">{category.title}</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {category.skills.map((skill) => (
-                <span key={skill.name} className="badge-skill">
-                  {skill.iconKey && <TechIcon name={skill.iconKey} />}
-                  {skill.name}
-                </span>
-              ))}
-            </div>
+    <div className="space-y-4">
+      {skills.map((group) => (
+        <div key={group.category}>
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+            {group.category}
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {group.items.map((item) => (
+              <span
+                key={item}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium",
+                  "border border-[hsl(var(--surface-border))]",
+                  "bg-[hsl(var(--bg-subtle))] text-foreground",
+                  "hover:border-[hsl(var(--accent-hsl))/40] hover:text-[hsl(var(--accent-hsl))]",
+                  "motion-safe-transition"
+                )}
+              >
+                {item}
+              </span>
+            ))}
           </div>
-        ))}
-      </div>
-    </AnimatedSection>
+        </div>
+      ))}
+    </div>
   );
-};
-
-export default SkillsSection;
+}

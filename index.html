@@ -1,12 +1,48 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Divij's Portfolio</title>
-    <meta name="description" content="Cloud Engineer transitioning to DevOps. Experienced in AWS infrastructure, Terraform IaC, CI/CD pipelines." />
-    <meta name="author" content="Cloud Engineer" />
-    <link rel="icon" type="image/png" href="public/favicon.png" />
+
+    <!-- SEO -->
+    <title>Divij P — Cloud & DevOps Engineer</title>
+    <meta name="description" content="Cloud Engineer at LTM formerly LTIMindtree, specialising in AWS infrastructure, Terraform IaC, GitHub Actions CI/CD, and Python automation. Focused on DevOps & Reliability." />
+    <meta name="author" content="Divij P" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Divij P — Cloud & DevOps Engineer" />
+    <meta property="og:description" content="Cloud Engineer at LTM formerly LTIMindtree. AWS · Terraform · GitHub Actions · Python · CloudWatch." />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Divij P — Cloud & DevOps Engineer" />
+    <meta name="twitter:description" content="Cloud Engineer at LTM formerly LTIMindtree. AWS · Terraform · GitHub Actions · Python · CloudWatch." />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- High-impact modern fonts: Plus Jakarta Sans & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Dark-mode flash prevention: read localStorage before React hydrates -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme-mode');
+          var mode = stored === 'light' ? 'light'
+                   : stored === 'dark'  ? 'dark'
+                   : window.matchMedia('(prefers-color-scheme: light)').matches ? 'light'
+                   : 'dark';
+          document.documentElement.classList.toggle('dark',  mode === 'dark');
+          document.documentElement.classList.toggle('light', mode === 'light');
+          document.documentElement.setAttribute('data-theme', mode);
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

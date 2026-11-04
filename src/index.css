@@ -1,131 +1,316 @@
+/* ─── Font imports (self-hosted via @fontsource) ──────────────────────────── */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/700.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* ─── Design tokens ───────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+  /* Accent – overridable by ThemeEngine */
+  --accent-hsl: 173 58% 45%;
 
-@layer base {
-  :root {
-    --background: 210 20% 98%;
-    --foreground: 222 47% 11%;
+  /* Effect intensities – overridable */
+  --blur-intensity: 12px;
+  --grain-intensity: 0.04;
+  --radius-base: 0.75rem;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+  /* Typography – overridable */
+  --font-heading: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+  /* Light mode palette */
+  --bg: 40 15% 96%;
+  --bg-subtle: 40 12% 92%;
+  --surface: 0 0% 100%;
+  --surface-glass: 0 0% 100% / 0.65;
+  --surface-border: 0 0% 0% / 0.08;
+  --surface-highlight: 0 0% 100% / 0.9;
+  --fg: 30 10% 12%;
+  --fg-muted: 30 6% 42%;
+  --fg-subtle: 30 4% 62%;
 
-    --primary: 215 28% 17%;
-    --primary-foreground: 210 40% 98%;
+  /* Tailwind token mapping */
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg);
+  --primary: var(--fg);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-subtle);
+  --secondary-foreground: var(--fg);
+  --muted: var(--bg-subtle);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--accent-hsl);
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 30 8% 85%;
+  --input: 30 8% 85%;
+  --ring: var(--accent-hsl);
+  --radius: var(--radius-base);
 
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 173 58% 39%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 173 58% 39%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-
-    --secondary: 217 33% 15%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 173 58% 45%;
-    --accent-foreground: 222 47% 6%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 173 58% 45%;
-
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  /* Color field behind glass panels (light) */
+  --color-field-1: hsl(200 60% 88%);
+  --color-field-2: hsl(160 40% 85%);
 }
 
+.dark {
+  color-scheme: dark;
+  /* Dark mode palette – slightly lighter refined warm charcoal */
+  --bg: 28 8% 13.5%;
+  --bg-subtle: 28 7% 17%;
+  --surface: 28 6% 18%;
+  --surface-glass: 28 6% 20% / 0.70;
+  --surface-border: 0 0% 100% / 0.09;
+  --surface-highlight: 0 0% 100% / 0.08;
+  --fg: 40 12% 95%;
+  --fg-muted: 30 8% 68%;
+  --fg-subtle: 30 6% 50%;
+
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg);
+  --primary: var(--fg);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-subtle);
+  --secondary-foreground: var(--fg);
+  --muted: var(--bg-subtle);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--accent-hsl);
+  --accent-foreground: 28 8% 10%;
+  --destructive: 0 63% 48%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 28 8% 24%;
+  --input: 28 8% 24%;
+  --ring: var(--accent-hsl);
+
+  /* Color field behind glass panels (dark) */
+  --color-field-1: hsl(200 45% 24%);
+  --color-field-2: hsl(155 35% 20%);
+}
+
+/* ─── Base resets ─────────────────────────────────────────────────────────── */
 @layer base {
-  * {
+  *, *::before, *::after {
     @apply border-border;
+    box-sizing: border-box;
   }
 
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    background-color: hsl(var(--bg));
+    color: hsl(var(--fg));
+    font-family: var(--font-body);
+    @apply antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  /* Custom scrollbar across entire app */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--surface-border) / 0.8) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--surface-border) / 0.8);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--fg-muted) / 0.6);
+  }
+
+  /* Form control dropdown styles for cross-browser dark mode readability */
+  select {
+    color-scheme: light dark;
+  }
+  .dark select {
+    color-scheme: dark;
+  }
+  select option {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--fg));
+    padding: 6px 10px;
+  }
+  .dark select option {
+    background-color: #242220 !important;
+    color: #f7f5f2 !important;
+  }
+
+  /* Custom thin scrollbar for panel containers */
+  .panel-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  .panel-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .panel-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 2px;
+  }
+  .panel-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--fg-subtle));
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent-hsl));
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
+/* ─── Components ──────────────────────────────────────────────────────────── */
 @layer components {
-  .section-container {
-    @apply max-w-4xl mx-auto px-6 py-8 md:py-12;
+  /* Glass panel */
+  .glass {
+    background: hsl(var(--surface-glass));
+    border: 1px solid hsl(var(--surface-border));
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    box-shadow:
+      inset 0 1px 0 hsl(var(--surface-highlight)),
+      0 4px 24px hsl(0 0% 0% / 0.12);
   }
 
-  .section-title {
-    @apply text-2xl md:text-3xl font-semibold text-foreground mb-8 tracking-tight;
+  /* Fallback when backdrop-filter unsupported */
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass {
+      background: hsl(var(--surface));
+      opacity: 0.97;
+    }
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  /* Panel with scroll and fade masks */
+  .panel-container {
+    position: relative;
+    overflow: hidden;
   }
 
-  .link-accent {
-    @apply text-accent hover:text-accent/80 transition-colors duration-200;
+  .panel-scroll-area {
+    @apply panel-scroll;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Top/bottom fade mask */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 32px,
+      black calc(100% - 32px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 32px,
+      black calc(100% - 32px),
+      transparent 100%
+    );
   }
 
-  .badge-skill {
-    @apply inline-flex items-center gap-2 px-3 py-2 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium;
+  /* Film grain overlay */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: var(--grain-intensity);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    background-repeat: repeat;
   }
 
-  .cta-button {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-foreground rounded-lg font-medium transition-all duration-200 hover:bg-accent/90 hover:shadow-md;
+  /* Color field blobs behind panels */
+  .color-field {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
   }
 
-  .cta-button-outline {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 border border-border text-foreground rounded-lg font-medium transition-all duration-200 hover:bg-secondary hover:border-muted-foreground/30;
+  .color-field::before,
+  .color-field::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+  }
+
+  .color-field::before {
+    width: 50vw;
+    height: 50vw;
+    background: var(--color-field-1);
+    top: -15vw;
+    right: -10vw;
+  }
+
+  .color-field::after {
+    width: 40vw;
+    height: 40vw;
+    background: var(--color-field-2);
+    bottom: -10vw;
+    left: 10vw;
+  }
+
+  /* Accent color helper */
+  .text-accent {
+    color: hsl(var(--accent-hsl));
+  }
+  .bg-accent {
+    background-color: hsl(var(--accent-hsl));
+  }
+  .border-accent {
+    border-color: hsl(var(--accent-hsl));
+  }
+}
+
+/* ─── Utilities ───────────────────────────────────────────────────────────── */
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Transition helpers that respect prefers-reduced-motion */
+  .motion-safe-transition {
+    transition-property: opacity, transform, background-color, border-color, color, box-shadow;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    transition-duration: 200ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe-transition {
+      transition: none !important;
+    }
   }
 }
