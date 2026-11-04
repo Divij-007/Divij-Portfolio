@@ -94,138 +94,152 @@ function Navbar({
   }, []);
 
   return (
-    <div className="fixed top-3 sm:top-5 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
-      <header
-        className={cn(
-          "pointer-events-auto max-w-6xl w-full transition-all duration-300 relative",
-          "rounded-2xl",
-          "bg-[hsl(var(--surface-glass))] backdrop-blur-2xl shadow-xl shadow-black/5 dark:shadow-black/35",
-          "px-5 sm:px-7 py-2.5 sm:py-3",
-          scrolled && "shadow-2xl bg-[hsl(var(--surface-glass))/95]"
-        )}
-      >
-        <nav className="flex items-center justify-between gap-4">
-          {/* Brand with attractive monogram */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2.5 font-heading font-extrabold text-base sm:text-lg text-foreground shrink-0 hover:text-[hsl(var(--accent-hsl))] transition-colors group"
-          >
-            <span className="w-8 h-8 rounded-lg bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] flex items-center justify-center text-xs font-bold font-mono">
-              DP
-            </span>
-            <span className="tracking-tight">{profile.name}</span>
-          </button>
-
-          {/* Desktop nav links */}
-          <ul className="hidden md:flex items-center gap-1.5">
-            {visible.map((s) => (
-              <li key={s.id}>
-                <button
-                  onClick={() => scrollTo(s.id)}
-                  className={cn(
-                    "px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200",
-                    active === s.id
-                      ? "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))] shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50]"
-                  )}
-                >
-                  {s.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          {/* Right actions: Theme toggle + Resume button */}
-          <div className="hidden md:flex items-center gap-3 shrink-0">
+    <>
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-xs md:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <div className="fixed top-3 sm:top-5 inset-x-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
+        <header
+          className={cn(
+            "pointer-events-auto max-w-6xl w-full transition-all duration-300 relative",
+            "rounded-2xl",
+            "bg-[hsl(var(--surface-glass))] backdrop-blur-2xl shadow-xl shadow-black/5 dark:shadow-black/35",
+            "px-4 sm:px-7 py-2.5 sm:py-3",
+            scrolled && "shadow-2xl bg-[hsl(var(--surface-glass))/95]"
+          )}
+        >
+          <nav className="flex items-center justify-between gap-4">
+            {/* Brand with attractive monogram */}
             <button
-              onClick={toggleMode}
-              aria-label={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50] transition-colors"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setMenuOpen(false);
+              }}
+              className="flex items-center gap-2.5 font-heading font-extrabold text-base sm:text-lg text-foreground shrink-0 hover:text-[hsl(var(--accent-hsl))] transition-colors group"
             >
-              {mode === "dark" ? (
-                <Sun className="w-4 h-4 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 text-indigo-500" />
-              )}
+              <span className="w-8 h-8 rounded-lg bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] flex items-center justify-center text-xs font-bold font-mono">
+                DP
+              </span>
+              <span className="tracking-tight">{profile.name}</span>
             </button>
-            <a
-              href={profile.resumeUrl}
-              download="Divij-P-Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold tracking-wide",
-                "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))]",
-                "hover:opacity-95 shadow-md shadow-[hsl(var(--accent-hsl))/20] hover:scale-[1.02] active:scale-[0.98] transition-all"
-              )}
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Resume</span>
-            </a>
-          </div>
 
-          {/* Mobile: theme + hamburger */}
-          <div className="flex md:hidden items-center gap-1.5">
-            <button
-              onClick={toggleMode}
-              aria-label="Toggle theme"
-              className="p-2 rounded-lg text-muted-foreground"
-            >
-              {mode === "dark" ? (
-                <Sun className="w-4 h-4 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 text-indigo-500" />
-              )}
-            </button>
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-label="Toggle menu"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50]"
-            >
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile dropdown */}
-        {menuOpen && (
-          <div className="md:hidden mt-3 pt-3 border-t border-[hsl(var(--surface-border))/20] animate-fade-in">
-            <ul className="space-y-1">
+            {/* Desktop nav links */}
+            <ul className="hidden md:flex items-center gap-1.5">
               {visible.map((s) => (
                 <li key={s.id}>
                   <button
-                    onClick={() => {
-                      scrollTo(s.id);
-                      setMenuOpen(false);
-                    }}
+                    onClick={() => scrollTo(s.id)}
                     className={cn(
-                      "w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                      "px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200",
                       active === s.id
-                        ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] font-semibold"
-                        : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--bg-subtle))]"
+                        ? "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))] shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50]"
                     )}
                   >
                     {s.label}
                   </button>
                 </li>
               ))}
-              <li className="pt-2">
-                <a
-                  href={profile.resumeUrl}
-                  download="Divij-P-Resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))] shadow-md"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download Resume</span>
-                </a>
-              </li>
             </ul>
-          </div>
-        )}
-      </header>
-    </div>
+
+            {/* Right actions: Theme toggle + Resume button */}
+            <div className="hidden md:flex items-center gap-3 shrink-0">
+              <button
+                onClick={toggleMode}
+                aria-label={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50] transition-colors"
+              >
+                {mode === "dark" ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-indigo-500" />
+                )}
+              </button>
+              <a
+                href={profile.resumeUrl}
+                download="Divij-P-Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold tracking-wide",
+                  "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))]",
+                  "hover:opacity-95 shadow-md shadow-[hsl(var(--accent-hsl))/20] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                )}
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Resume</span>
+              </a>
+            </div>
+
+            {/* Mobile: theme + hamburger */}
+            <div className="flex md:hidden items-center gap-1">
+              <button
+                onClick={toggleMode}
+                aria-label="Toggle theme"
+                className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50] min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
+              >
+                {mode === "dark" ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-indigo-500" />
+                )}
+              </button>
+              <button
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label="Toggle menu"
+                className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/50] min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
+              >
+                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </nav>
+
+          {/* Mobile dropdown */}
+          {menuOpen && (
+            <div className="md:hidden mt-3 pt-3 border-t border-[hsl(var(--surface-border))/20] animate-fade-in">
+              <ul className="space-y-1">
+                {visible.map((s) => (
+                  <li key={s.id}>
+                    <button
+                      onClick={() => {
+                        scrollTo(s.id);
+                        setMenuOpen(false);
+                      }}
+                      className={cn(
+                        "w-full text-left px-3.5 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-between",
+                        active === s.id
+                          ? "bg-[hsl(var(--accent-hsl))/15] text-[hsl(var(--accent-hsl))] font-semibold"
+                          : "text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--surface-border))/30]"
+                      )}
+                    >
+                      <span>{s.label}</span>
+                      {active === s.id && <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent-hsl))]" />}
+                    </button>
+                  </li>
+                ))}
+                <li className="pt-2">
+                  <a
+                    href={profile.resumeUrl}
+                    download="Divij-P-Resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))] shadow-md active:scale-[0.98] transition-all"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Resume</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )}
+        </header>
+      </div>
+    </>
   );
 }
 
@@ -241,8 +255,8 @@ function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={cn("py-20 md:py-28 scroll-mt-24", className)}>
-      <div className="max-w-6xl mx-auto px-6">{children}</div>
+    <section id={id} className={cn("py-14 sm:py-20 md:py-28 scroll-mt-20 sm:scroll-mt-24", className)}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">{children}</div>
     </section>
   );
 }
@@ -258,17 +272,17 @@ function SectionHeading({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: "-40px" }}
       variants={fadeUp}
-      className="mb-12"
+      className="mb-8 sm:mb-12"
     >
-      <div className="flex items-center gap-3 mb-2">
-        <span className="w-8 h-1 bg-[hsl(var(--accent-hsl))] rounded-full" />
+      <div className="flex items-center gap-2.5 sm:gap-3 mb-2">
+        <span className="w-6 sm:w-8 h-1 bg-[hsl(var(--accent-hsl))] rounded-full shrink-0" />
         <span className="text-xs font-mono font-semibold tracking-widest uppercase text-[hsl(var(--accent-hsl))]">
           {title}
         </span>
       </div>
-      <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">
+      <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
         {subtitle ?? title}
       </h2>
     </motion.div>
@@ -291,8 +305,8 @@ function HeroSection({
   };
 }) {
   return (
-    <section className="min-h-screen flex items-center pt-28 pb-16 relative">
-      <div className="max-w-6xl mx-auto px-6 w-full">
+    <section className="min-h-[100dvh] flex items-center pt-24 sm:pt-28 pb-12 sm:pb-16 relative">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full">
         <div className="max-w-4xl">
           {/* Status availability pill */}
           <motion.div
@@ -300,13 +314,13 @@ function HeroSection({
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border border-[hsl(var(--accent-hsl))/30] bg-[hsl(var(--accent-hsl))/10] text-[hsl(var(--accent-hsl))] mb-6"
+            className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold border border-[hsl(var(--accent-hsl))/30] bg-[hsl(var(--accent-hsl))/10] text-[hsl(var(--accent-hsl))] mb-5 sm:mb-6 max-w-full"
           >
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[hsl(var(--accent-hsl))] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[hsl(var(--accent-hsl))]"></span>
             </span>
-            <span>Available for Cloud & DevOps Roles · Chennai, India</span>
+            <span className="truncate sm:whitespace-normal">Available for Cloud & DevOps Roles · Chennai, India</span>
           </motion.div>
 
           {/* Name in striking, professional display font */}
@@ -315,7 +329,7 @@ function HeroSection({
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="font-heading font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-foreground tracking-tight leading-[0.95] mb-6"
+            className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-foreground tracking-tight leading-[1.05] sm:leading-[0.95] mb-4 sm:mb-6 break-words"
           >
             {profile.name}
           </motion.h1>
@@ -326,12 +340,12 @@ function HeroSection({
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="space-y-2 mb-6"
+            className="space-y-1.5 sm:space-y-2 mb-5 sm:mb-6"
           >
-            <p className="text-2xl sm:text-3xl md:text-4xl text-foreground/90 font-semibold tracking-tight">
+            <p className="text-xl sm:text-3xl md:text-4xl text-foreground/90 font-semibold tracking-tight">
               {profile.title}
             </p>
-            <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1 text-lg sm:text-xl font-medium">
+            <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1 text-base sm:text-xl font-medium">
               <span className="text-[hsl(var(--accent-hsl))]">@</span>
               <span className="text-[hsl(var(--accent-hsl))] font-extrabold">LTM</span>
               <span className="text-xs sm:text-sm font-semibold tracking-normal text-black dark:text-neutral-300">
@@ -340,13 +354,13 @@ function HeroSection({
             </div>
           </motion.div>
 
-          {/* Tagline / Subtitle with text-justify */}
+          {/* Tagline / Subtitle with mobile-friendly text-left alignment */}
           <motion.p
             custom={3}
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="text-base sm:text-lg text-muted-foreground text-justify leading-relaxed max-w-2xl mb-8"
+            className="text-sm sm:text-base md:text-lg text-muted-foreground text-left sm:text-justify leading-relaxed max-w-2xl mb-6 sm:mb-8"
           >
             {profile.tagline}. Driving mission-critical cloud operations, Terraform
             automation, and proactive monitoring across enterprise AWS banking environments.
@@ -358,7 +372,7 @@ function HeroSection({
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="flex flex-wrap gap-2 mb-10"
+            className="flex flex-wrap gap-1.5 sm:gap-2 mb-8 sm:mb-10"
           >
             {[
               "AWS Cloud",
@@ -370,20 +384,20 @@ function HeroSection({
             ].map((pill) => (
               <span
                 key={pill}
-                className="px-3 py-1 rounded-lg text-xs font-mono font-medium border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] text-foreground/80 backdrop-blur-md"
+                className="px-2.5 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-mono font-medium border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] text-foreground/85 backdrop-blur-md"
               >
                 {pill}
               </span>
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - full-width on mobile, side-by-side on sm+ */}
           <motion.div
             custom={5}
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="flex flex-wrap gap-3 items-center"
+            className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto"
           >
             <a
               href={profile.resumeUrl}
@@ -391,24 +405,24 @@ function HeroSection({
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold tracking-wide",
+                "flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold tracking-wide",
                 "bg-[hsl(var(--accent-hsl))] text-[hsl(var(--accent-foreground))]",
-                "shadow-lg shadow-[hsl(var(--accent-hsl))/25] hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                "shadow-lg shadow-[hsl(var(--accent-hsl))/25] hover:opacity-95 active:scale-[0.98] transition-all text-center"
               )}
             >
               <Download className="w-4 h-4" />
-              Download Resume
+              <span>Download Resume</span>
             </a>
             <a
               href={`mailto:${profile.email}`}
               className={cn(
-                "flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold",
+                "flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold",
                 "border border-[hsl(var(--border))] bg-[hsl(var(--surface-glass))] text-foreground backdrop-blur-md",
-                "hover:bg-[hsl(var(--bg-subtle))] hover:border-[hsl(var(--accent-hsl))/40] transition-all"
+                "hover:bg-[hsl(var(--bg-subtle))] hover:border-[hsl(var(--accent-hsl))/40] active:scale-[0.98] transition-all text-center"
               )}
             >
               <Mail className="w-4 h-4" />
-              Get in Touch
+              <span>Get in Touch</span>
             </a>
           </motion.div>
 
@@ -418,7 +432,7 @@ function HeroSection({
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            className="flex gap-3 mt-8"
+            className="flex gap-3 mt-7 sm:mt-8"
           >
             {profile.socials
               .filter((s) => s.url.startsWith("http"))
@@ -429,7 +443,7 @@ function HeroSection({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-10 h-10 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
+                  className="w-11 h-11 rounded-xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
                 >
                   {s.icon === "linkedin" ? (
                     <Linkedin className="w-4 h-4" />
@@ -451,15 +465,15 @@ function AboutSection({ bio }: { bio: string }) {
   return (
     <Section id="about" className="bg-[hsl(var(--bg-subtle))]">
       <SectionHeading title="About" subtitle="Engineering Resilient Cloud Foundations" />
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           className="lg:col-span-8 space-y-4"
         >
-          <p className="text-base sm:text-lg text-muted-foreground text-justify leading-relaxed">
+          <p className="text-base sm:text-lg text-muted-foreground text-left sm:text-justify leading-relaxed">
             {bio}
           </p>
         </motion.div>
@@ -468,26 +482,26 @@ function AboutSection({ bio }: { bio: string }) {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
-          className="lg:col-span-4 grid grid-cols-1 gap-4"
+          className="lg:col-span-4 grid grid-cols-1 gap-3.5 sm:gap-4"
         >
-          <div className="p-5 rounded-2xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md">
+          <div className="p-4 sm:p-5 rounded-2xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md">
             <div className="flex items-center gap-3 mb-2">
               <Cloud className="w-5 h-5 text-[hsl(var(--accent-hsl))]" />
               <h4 className="font-heading font-bold text-foreground text-sm">Enterprise AWS Migration</h4>
             </div>
-            <p className="text-xs text-muted-foreground text-justify leading-relaxed">
+            <p className="text-xs text-muted-foreground text-left sm:text-justify leading-relaxed">
               Operational readiness, patch management, private AMI validation, and automated CloudWatch alarms for ABSA banking.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md">
+          <div className="p-4 sm:p-5 rounded-2xl border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-md">
             <div className="flex items-center gap-3 mb-2">
               <Terminal className="w-5 h-5 text-[hsl(var(--accent-hsl))]" />
               <h4 className="font-heading font-bold text-foreground text-sm">Automation & Governance</h4>
             </div>
-            <p className="text-xs text-muted-foreground text-justify leading-relaxed">
+            <p className="text-xs text-muted-foreground text-left sm:text-justify leading-relaxed">
               Custom Python/Boto3 and AWS Lambda solutions enforcing tag governance, idle resource termination, and auto-healing alarms.
             </p>
           </div>
@@ -515,7 +529,7 @@ function ExperienceSection({
   return (
     <Section id="experience">
       <SectionHeading title="Experience" subtitle="Professional Impact & Responsibilities" />
-      <div className="space-y-10">
+      <div className="space-y-6 sm:space-y-10">
         {experience.map((exp, i) => (
           <motion.article
             key={exp.id}
@@ -525,22 +539,22 @@ function ExperienceSection({
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
             className={cn(
-              "rounded-2xl p-6 sm:p-8 md:p-10 border border-[hsl(var(--surface-border))]",
+              "rounded-2xl p-5 sm:p-8 md:p-10 border border-[hsl(var(--surface-border))]",
               "bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-lg"
             )}
           >
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8 pb-6 border-b border-[hsl(var(--surface-border))]">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-5 sm:pb-6 border-b border-[hsl(var(--surface-border))]">
               <div>
                 <div className="flex items-center gap-2.5 mb-2">
-                  <div className="p-2 rounded-xl bg-[hsl(var(--accent-hsl))/12] text-[hsl(var(--accent-hsl))]">
-                    <Briefcase className="w-5 h-5" />
+                  <div className="p-2 rounded-xl bg-[hsl(var(--accent-hsl))/12] text-[hsl(var(--accent-hsl))] shrink-0">
+                    <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-foreground tracking-tight">
+                  <h3 className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl text-foreground tracking-tight">
                     {exp.role}
                   </h3>
                 </div>
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="text-base sm:text-lg text-[hsl(var(--accent-hsl))] font-bold">
+                  <span className="text-sm sm:text-lg text-[hsl(var(--accent-hsl))] font-bold">
                     LTM
                   </span>
                   <span className="text-xs font-semibold text-black dark:text-neutral-300">
@@ -559,7 +573,7 @@ function ExperienceSection({
               </div>
             </div>
 
-            <ul className="space-y-4">
+            <ul className="space-y-3 sm:space-y-4">
               {exp.responsibilities.map((item, j) => {
                 const parts = item.split(":");
                 const heading = parts.length > 1 ? parts[0] : null;
@@ -568,9 +582,9 @@ function ExperienceSection({
                 return (
                   <li
                     key={j}
-                    className="flex items-start gap-3 text-sm text-muted-foreground text-justify leading-relaxed"
+                    className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed"
                   >
-                    <span className="text-[hsl(var(--accent-hsl))] font-bold mt-0.5 shrink-0 text-base">
+                    <span className="text-[hsl(var(--accent-hsl))] font-bold mt-0.5 shrink-0 text-sm sm:text-base">
                       ▸
                     </span>
                     <span>
@@ -602,7 +616,7 @@ function SkillsSection({
   return (
     <Section id="skills" className="bg-[hsl(var(--bg-subtle))]">
       <SectionHeading title="Skills" subtitle="Technical Proficiencies & Tooling" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {skills.map((group, i) => (
           <motion.div
             key={group.category}
@@ -612,19 +626,19 @@ function SkillsSection({
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
             className={cn(
-              "rounded-2xl p-6 border border-[hsl(var(--surface-border))]",
+              "rounded-2xl p-5 sm:p-6 border border-[hsl(var(--surface-border))]",
               "bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-md",
               "hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
             )}
           >
-            <h3 className="font-heading font-bold text-foreground mb-4 text-xs font-mono uppercase tracking-widest text-[hsl(var(--accent-hsl))]">
+            <h3 className="font-heading font-bold text-foreground mb-3 sm:mb-4 text-xs font-mono uppercase tracking-widest text-[hsl(var(--accent-hsl))]">
               {group.category}
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {group.items.map((item) => (
                 <span
                   key={item}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium border border-[hsl(var(--surface-border))] bg-[hsl(var(--bg))] text-foreground/90 hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
+                  className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-medium border border-[hsl(var(--surface-border))] bg-[hsl(var(--bg))] text-foreground/90 hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
                 >
                   {item}
                 </span>
@@ -659,16 +673,16 @@ function CaseStudySection({ caseStudies }: { caseStudies: CaseStudy[] }) {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
-            <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-foreground mb-2 tracking-tight">
+            <h3 className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl text-foreground mb-2 tracking-tight">
               {cs.title}
             </h3>
-            <p className="text-sm sm:text-base text-muted-foreground text-justify leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-muted-foreground text-left sm:text-justify leading-relaxed">
               {cs.subtitle}
             </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {cs.blocks.map((block, j) => {
               const Icon = block.icon ? blockIconMap[block.icon] : null;
               return (
@@ -680,17 +694,17 @@ function CaseStudySection({ caseStudies }: { caseStudies: CaseStudy[] }) {
                   viewport={{ once: true, margin: "-30px" }}
                   variants={fadeUp}
                   className={cn(
-                    "rounded-2xl p-7 border border-[hsl(var(--surface-border))]",
+                    "rounded-2xl p-5 sm:p-7 border border-[hsl(var(--surface-border))]",
                     "bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-md"
                   )}
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    {Icon && <Icon className="w-5 h-5 text-[hsl(var(--accent-hsl))]" />}
-                    <h4 className="font-heading font-bold text-foreground text-sm uppercase tracking-wider">
+                  <div className="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
+                    {Icon && <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[hsl(var(--accent-hsl))] shrink-0" />}
+                    <h4 className="font-heading font-bold text-foreground text-xs sm:text-sm uppercase tracking-wider">
                       {block.title}
                     </h4>
                   </div>
-                  <p className="text-sm text-muted-foreground text-justify leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed">
                     {block.content}
                   </p>
                 </motion.div>
@@ -723,7 +737,7 @@ function CertificationsSection({
   return (
     <Section id="certifications" className="bg-[hsl(var(--bg-subtle))]">
       <SectionHeading title="Certifications" subtitle="Industry Accreditations" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {certifications.map((cert, i) => (
           <motion.article
             key={cert.id}
@@ -733,24 +747,24 @@ function CertificationsSection({
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
             className={cn(
-              "rounded-2xl p-7 border border-[hsl(var(--surface-border))]",
+              "rounded-2xl p-5 sm:p-7 border border-[hsl(var(--surface-border))]",
               "bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-md",
               "hover:border-[hsl(var(--accent-hsl))/40] transition-colors"
             )}
           >
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-2xl bg-amber-500/15 shrink-0 border border-amber-500/30">
-                <Award className="w-6 h-6 text-amber-500" />
+            <div className="flex items-start gap-3.5 sm:gap-4">
+              <div className="p-2.5 sm:p-3 rounded-2xl bg-amber-500/15 shrink-0 border border-amber-500/30">
+                <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-heading font-extrabold text-foreground text-lg sm:text-xl leading-snug mb-1">
+                <h3 className="font-heading font-extrabold text-foreground text-base sm:text-lg md:text-xl leading-snug mb-1">
                   {cert.name}
                 </h3>
-                <p className="text-[hsl(var(--accent-hsl))] font-semibold text-sm mb-3">
+                <p className="text-[hsl(var(--accent-hsl))] font-semibold text-xs sm:text-sm mb-2 sm:mb-3">
                   {cert.issuer}
                 </p>
                 {cert.description && (
-                  <p className="text-xs sm:text-sm text-muted-foreground text-justify leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed mb-3 sm:mb-4">
                     {cert.description}
                   </p>
                 )}
@@ -766,7 +780,7 @@ function CertificationsSection({
                     href={cert.badgeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-5 text-xs font-semibold text-[hsl(var(--accent-hsl))] hover:underline transition-all"
+                    className="inline-flex items-center gap-1.5 mt-4 sm:mt-5 text-xs font-semibold text-[hsl(var(--accent-hsl))] hover:underline transition-all"
                   >
                     View Official Credential <ExternalLink className="w-3.5 h-3.5" />
                   </a>
@@ -775,11 +789,11 @@ function CertificationsSection({
             </div>
           </motion.article>
         ))}
-        <div className="rounded-2xl p-7 border border-dashed border-[hsl(var(--surface-border))] flex flex-col justify-center items-center text-center">
-          <p className="text-sm font-medium text-foreground mb-1">
+        <div className="rounded-2xl p-5 sm:p-7 border border-dashed border-[hsl(var(--surface-border))] flex flex-col justify-center items-center text-center">
+          <p className="text-xs sm:text-sm font-medium text-foreground mb-1">
             Additional Certifications In Progress
           </p>
-          <p className="text-xs text-muted-foreground max-w-xs text-justify">
+          <p className="text-xs text-muted-foreground max-w-xs text-left sm:text-center leading-relaxed">
             Currently advancing AWS Solutions Architect & DevOps Engineer professional competencies.
           </p>
         </div>
@@ -843,13 +857,13 @@ function ContactSection({
           whileInView="visible"
           viewport={{ once: true }}
           variants={fadeUp}
-          className="text-base sm:text-lg text-muted-foreground text-justify leading-relaxed mb-8"
+          className="text-sm sm:text-base md:text-lg text-muted-foreground text-left sm:text-justify leading-relaxed mb-6 sm:mb-8"
         >
           Open to Cloud Engineer and DevOps Engineer opportunities. Whether you have an
           infrastructure automation inquiry or want to discuss enterprise cloud readiness,
           feel free to reach out directly.
         </motion.p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {items.map((item, i) => (
             <motion.a
               key={item.label}
@@ -862,7 +876,7 @@ function ContactSection({
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
               className={cn(
-                "flex items-center gap-4 p-5 rounded-2xl",
+                "flex items-center gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl",
                 "border border-[hsl(var(--surface-border))] bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-sm",
                 "hover:border-[hsl(var(--accent-hsl))/40] hover:bg-[hsl(var(--accent-hsl))/5]",
                 "group transition-all duration-200"
@@ -872,15 +886,15 @@ function ContactSection({
                 {item.icon}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-0.5">
+                <p className="text-[11px] sm:text-xs text-muted-foreground font-mono uppercase tracking-wider mb-0.5">
                   {item.label}
                 </p>
-                <p className="text-sm font-medium text-foreground truncate group-hover:text-[hsl(var(--accent-hsl))] transition-colors">
+                <p className="text-xs sm:text-sm font-medium text-foreground truncate group-hover:text-[hsl(var(--accent-hsl))] transition-colors">
                   {item.value}
                 </p>
               </div>
               {item.external && (
-                <ExternalLink className="w-4 h-4 text-muted-foreground/40 group-hover:text-[hsl(var(--accent-hsl))] transition-colors shrink-0" />
+                <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground/40 group-hover:text-[hsl(var(--accent-hsl))] transition-colors shrink-0" />
               )}
             </motion.a>
           ))}
@@ -894,17 +908,17 @@ function ContactSection({
 
 function Footer({ name }: { name: string }) {
   return (
-    <footer className="border-t border-[hsl(var(--surface-border))] py-10 bg-[hsl(var(--bg))]">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground">
+    <footer className="border-t border-[hsl(var(--surface-border))] py-8 sm:py-10 bg-[hsl(var(--bg))]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           © {new Date().getFullYear()} {name}. Built with focus on cloud infrastructure & automation.
         </p>
-        <div className="flex items-center gap-4 text-xs text-muted-foreground/60 font-mono">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-4 text-xs text-muted-foreground/60 font-mono">
           <span>React 18 · Vite · Tailwind · TypeScript</span>
-          <span>·</span>
+          <span className="hidden sm:inline">·</span>
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1 text-muted-foreground/50 hover:text-[hsl(var(--accent-hsl))] transition-colors"
+            className="inline-flex items-center gap-1.5 py-1 px-2 rounded-md hover:bg-[hsl(var(--surface-border))/30] text-muted-foreground/60 hover:text-[hsl(var(--accent-hsl))] transition-colors"
             title="Admin Login"
           >
             <Lock className="w-3 h-3" />
@@ -948,7 +962,7 @@ export default function Index() {
     .sort((a, b) => a.order - b.order);
 
   return (
-    <div className="relative min-h-screen bg-[hsl(var(--bg))] font-sans antialiased selection:bg-[hsl(var(--accent-hsl))/30]">
+    <div className="relative min-h-screen bg-[hsl(var(--bg))] font-sans antialiased selection:bg-[hsl(var(--accent-hsl))/30] overflow-x-hidden">
       {/* Background color blobs */}
       <div className="color-field" aria-hidden="true" />
       {/* Subtle film grain */}
