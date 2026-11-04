@@ -31,9 +31,10 @@
     { "id": "about",          "label": "About",          "visible": true, "order": 0 },
     { "id": "experience",     "label": "Experience",     "visible": true, "order": 1 },
     { "id": "skills",         "label": "Skills",         "visible": true, "order": 2 },
-    { "id": "case-study",     "label": "Case Study",     "visible": true, "order": 3 },
-    { "id": "certifications", "label": "Certifications", "visible": true, "order": 4 },
-    { "id": "contact",        "label": "Contact",        "visible": true, "order": 5 }
+    { "id": "projects",       "label": "Projects",       "visible": true, "order": 3 },
+    { "id": "case-study",     "label": "Case Study",     "visible": true, "order": 4 },
+    { "id": "certifications", "label": "Certifications", "visible": true, "order": 5 },
+    { "id": "contact",        "label": "Contact",        "visible": true, "order": 6 }
   ],
   "experience": [
     {
@@ -53,7 +54,24 @@
       ]
     }
   ],
-  "projects": [],
+  "projects": [
+    {
+      "id": "proj-aws-terraform-observability",
+      "name": "AWS Multi-Account Terraform & CloudWatch Pipeline",
+      "description": "Modular Infrastructure as Code (IaC) templates automating CloudWatch metric alarms, SNS notification chains, and RDS monitoring across AWS environments using GitHub Actions CI/CD.",
+      "url": "",
+      "repoUrl": "https://github.com/Divij-007",
+      "tags": ["AWS", "Terraform", "GitHub Actions", "CloudWatch", "Python"]
+    },
+    {
+      "id": "proj-lambda-tag-governance",
+      "name": "Automated AWS Tag Governance & Cost Optimizer",
+      "description": "Event-driven serverless solution leveraging AWS Lambda and Boto3 to audit unattached EBS volumes, enforce mandatory resource tagging schemas, and auto-terminate non-compliant test workloads.",
+      "url": "",
+      "repoUrl": "https://github.com/Divij-007",
+      "tags": ["Python", "AWS Lambda", "Boto3", "CloudWatch Events", "Cost Optimization"]
+    }
+  ],
   "skills": [
     {
       "category": "Cloud Infrastructure",

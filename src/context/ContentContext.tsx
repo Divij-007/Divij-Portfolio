@@ -12,6 +12,27 @@ import {
 const SYNC_CHANNEL_NAME = "portfolio_content_sync";
 const LOCAL_CACHE_KEY = "portfolio_content_cache";
 
+// Helper to ensure projects section exists in any loaded content
+function normalizeContent(data: SiteContent): SiteContent {
+  const hasProjects = data.sections.some((s) => s.id === "projects");
+  if (!hasProjects) {
+    const list = [...data.sections];
+    const skillsIdx = list.findIndex((s) => s.id === "skills");
+    const insertIdx = skillsIdx !== -1 ? skillsIdx + 1 : list.length;
+    list.splice(insertIdx, 0, {
+      id: "projects",
+      label: "Projects",
+      visible: true,
+      order: insertIdx,
+    });
+    return {
+      ...data,
+      sections: list.map((s, idx) => ({ ...s, order: idx })),
+    };
+  }
+  return data;
+}
+
 // ─── Data-access interface ───────────────────────────────────────────────────
 export interface ContentSource {
   getContent(): Promise<{ data: SiteContent; isRemote: boolean }>;
@@ -28,17 +49,19 @@ export class HybridContentSource implements ContentSource {
         if (cached) {
           const parsedCache = SiteContentSchema.safeParse(JSON.parse(cached));
           if (parsedCache.success) {
+            const normalized = normalizeContent(parsedCache.data);
             // Revalidate with remote in background
             fetchRemoteContent().then((remote) => {
               if (remote) {
                 const parsed = SiteContentSchema.safeParse(remote);
                 if (parsed.success) {
-                  localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(parsed.data));
+                  const normalizedRemote = normalizeContent(parsed.data);
+                  localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(normalizedRemote));
                 }
               }
             }).catch(() => {});
 
-            return { data: parsedCache.data, isRemote: true };
+            return { data: normalized, isRemote: true };
           }
         }
       } catch {
@@ -52,14 +75,15 @@ export class HybridContentSource implements ContentSource {
       if (remote) {
         const parsed = SiteContentSchema.safeParse(remote);
         if (parsed.success) {
+          const normalized = normalizeContent(parsed.data);
           if (typeof window !== "undefined") {
             try {
-              localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(parsed.data));
+              localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(normalized));
             } catch {
               /* ignore storage error */
             }
           }
-          return { data: parsed.data, isRemote: true };
+          return { data: normalized, isRemote: true };
         }
         console.warn("Supabase content did not pass schema validation, falling back to bundled:", parsed.error);
       }
@@ -73,7 +97,7 @@ export class HybridContentSource implements ContentSource {
       console.error("Bundled content.json failed validation:", parsed.error.format());
       throw new Error("content.json failed Zod validation");
     }
-    return { data: parsed.data, isRemote: false };
+    return { data: normalizeContent(parsed.data), isRemote: false };
   }
 
   async saveContent(content: SiteContent): Promise<{ success: boolean; error?: string }> {

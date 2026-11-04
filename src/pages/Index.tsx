@@ -26,10 +26,11 @@ import {
   ShieldCheck,
   Server,
   Lock,
+  FolderGit2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import type { SectionMeta, CaseStudy } from "@/types/content";
+import type { SectionMeta, CaseStudy, Project } from "@/types/content";
 
 // ── Motion variants ────────────────────────────────────────────────────────────
 
@@ -651,6 +652,90 @@ function SkillsSection({
   );
 }
 
+// ── PROJECTS SECTION ───────────────────────────────────────────────────────────
+
+function ProjectsSection({ projects }: { projects: Project[] }) {
+  if (!projects || projects.length === 0) return null;
+
+  return (
+    <Section id="projects">
+      <SectionHeading title="Projects" subtitle="Featured Engineering & Open-Source Work" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        {projects.map((proj, i) => (
+          <motion.article
+            key={proj.id}
+            custom={i}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={fadeUp}
+            className={cn(
+              "rounded-2xl p-6 sm:p-7 border border-[hsl(var(--surface-border))]",
+              "bg-[hsl(var(--surface-glass))] backdrop-blur-xl shadow-md",
+              "hover:border-[hsl(var(--accent-hsl))/40] transition-colors flex flex-col justify-between"
+            )}
+          >
+            <div>
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="p-2 rounded-xl bg-[hsl(var(--accent-hsl))/12] text-[hsl(var(--accent-hsl))] shrink-0">
+                  <FolderGit2 className="w-5 h-5" />
+                </div>
+                <h3 className="font-heading font-extrabold text-lg sm:text-xl text-foreground tracking-tight">
+                  {proj.name}
+                </h3>
+              </div>
+
+              <p className="text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed mb-4">
+                {proj.description}
+              </p>
+
+              {proj.tags && proj.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6">
+                  {proj.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium border border-[hsl(var(--surface-border))] bg-[hsl(var(--bg))] text-foreground/85"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {(proj.repoUrl || proj.url) && (
+              <div className="flex items-center gap-4 pt-4 border-t border-[hsl(var(--surface-border))] text-xs font-semibold">
+                {proj.repoUrl && (
+                  <a
+                    href={proj.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Github className="w-4 h-4" />
+                    <span>Repository</span>
+                  </a>
+                )}
+                {proj.url && (
+                  <a
+                    href={proj.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[hsl(var(--accent-hsl))] hover:underline transition-all ml-auto"
+                  >
+                    <span>Live Preview</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+            )}
+          </motion.article>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 // ── CASE STUDY SECTION ─────────────────────────────────────────────────────────
 
 const blockIconMap: Record<string, React.FC<{ className?: string }>> = {
@@ -988,6 +1073,13 @@ export default function Index() {
               );
             case "skills":
               return <SkillsSection key={s.id} skills={content.skills} />;
+            case "projects":
+              return (
+                <ProjectsSection
+                  key={s.id}
+                  projects={content.projects}
+                />
+              );
             case "case-study":
               return (
                 <CaseStudySection
